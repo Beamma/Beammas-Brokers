@@ -7,9 +7,10 @@ app.config.from_object(Config)  # applying all config to app
 db = SQLAlchemy(app)
 
 import models
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html")
+    result = models.User.query.filter_by(id=1).first()
+    return render_template("home.html", result = result)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
