@@ -9,7 +9,8 @@ db = SQLAlchemy(app)
 import models
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    result = models.User.query.filter_by(id=1).first()
+    result = models.User.query.filter_by(id=1).all()
+    print(result)
     return render_template("home.html", result = result)
 
 @app.route('/login', methods=['GET', 'POST'])

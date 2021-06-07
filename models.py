@@ -36,4 +36,6 @@ class User(db.Model):
     card = db.Column(db.Integer, nullable=False, default=0)
     balance = db.Column(db.Integer, nullable=False, default=0)
 
+    def __repr__(self):
+        return f'<User {self.name}>'
 # db.create_all(extend_existing=True)
