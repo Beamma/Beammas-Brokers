@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class = "content">
-  sign up
+  <form method="POST">
+    <input type="text" name="user_name" placeholder="User Name"></input>
+    <input type="password" name="password" placeholder="Password"></input>
+    <input type="email" name="email" placeholder="Example@Gmail.Com"</input>
+    <div class = "submit">
+      <input type="submit"></input>
+    </div>
+  </form>
 </div>
 {% endblock %}
