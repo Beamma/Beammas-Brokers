@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
   {% for stocks in stock_info %}
-    <a href = "{{ url_for('stock', id = stocks.id) }}"> {{ stocks.name }} </a>
+    <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> {{ stocks.name }} </a>
   {% endfor %}
 {% endblock %}

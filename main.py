@@ -24,9 +24,9 @@ def home():
 
 
 
-@app.route('/stock/<int:id>', methods=["GET", "POST"])
-def stock(id):
-    stock_info = models.Stock.query.filter_by(id=id).first()
+@app.route('/stock/<symbol>', methods=["GET", "POST"])
+def stock(symbol):
+    stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
     ticker = yf.Ticker(symbol)
     history = ticker.history(period="1y")
