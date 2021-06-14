@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import insert
 from config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import http.client
+import json
 app = Flask(__name__)
 app.config.from_object(Config)  # applying all config to app
 app.config['SESSION_TYPE'] = 'memcached'
@@ -15,7 +16,31 @@ import models
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html", status = session.get('login', None))
+    conn = http.client.HTTPSConnection("yahoo-finance-low-latency.p.rapidapi.com")
+
+    headers = {
+        'x-rapidapi-key': "ad2a76ef08msh111b0faa42d8165p1c3321jsn7b86be045c34",
+        'x-rapidapi-host': "yahoo-finance-low-latency.p.rapidapi.com"
+        }
+    symbol = "AAPL"
+    conn.request("GET", "/v8/finance/spark?symbols=%s&range=max&interval=15m" %symbol, headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    stocks = data.decode("utf-8")
+    dictionary = json.loads(stocks)
+    appl = dictionary.get("AAPL")
+    print(appl)
+    times = appl.get("timestamp")
+    prices = appl.get("close")
+
+    stock_history = []
+    for i in range(len(prices)):
+        data = [str(times[i]) , prices[i]]
+        stock_history.append(data)
+
+    return render_template("home.html", status = session.get('login', None), stock = stock_history)
 
 
 

@@ -19,9 +19,11 @@
 # times = appl.get("timestamp")
 # prices = appl.get("close")
 #
+# stock_history = []
 # for i in range(len(prices)):
-# 	print("Time:", times[i], "Price:", prices[i])
-
+#     data = ["Time:", times[i], "Price:", prices[i]]
+#     stock_history.append(data)
+# print(stock_history)
 
 
 
