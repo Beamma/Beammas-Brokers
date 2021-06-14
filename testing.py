@@ -1,56 +1,65 @@
-import http.client
-import json
-
-conn = http.client.HTTPSConnection("yahoo-finance-low-latency.p.rapidapi.com")
-
-headers = {
-    'x-rapidapi-key': "ad2a76ef08msh111b0faa42d8165p1c3321jsn7b86be045c34",
-    'x-rapidapi-host': "yahoo-finance-low-latency.p.rapidapi.com"
-    }
-
-conn.request("GET", "/v8/finance/spark?symbols=AAPL&range=1d&interval=5m", headers=headers)
-
-res = conn.getresponse()
-data = res.read()
-
-stocks = data.decode("utf-8")
-print(stocks)
-dictionary = json.loads(stocks)
-appl = dictionary.get("AAPL")
-times = appl.get("timestamp")
-prices = appl.get("close")
-
-stock_history = []
-for i in range(len(prices)):
-    data = ["Time:", times[i], "Price:", prices[i]]
-    stock_history.append(data)
-print(stock_history)
-
-
-
-
-# import models
-# email_status = "passed"
-# input = input()
-# user = models.User.query.all()
-# for user in user:
-#     if input == user.email:
-#         break
-#         email_status = "failed"
-# print(email_status)
-
-# import http.client
+# import yfinance as yf
 #
-# conn = http.client.HTTPSConnection("yahoo-finance-low-latency.p.rapidapi.com")
+# msft = yf.Ticker("MSFT")
+
+# get stock info
+# msft.info
+
+# get historical market data
+# history = msft.history(period="1y")
+# stock_history = []
+# for index in history.index:
+#     date_price = [index, history.loc[index]['Close']]
+#     stock_history.append(date_price)
+# print(stock_history)
+
+# show actions (dividends, splits)
+# msft.actions
 #
-# headers = {
-#     'x-rapidapi-key': "ad2a76ef08msh111b0faa42d8165p1c3321jsn7b86be045c34",
-#     'x-rapidapi-host': "yahoo-finance-low-latency.p.rapidapi.com"
-#     }
+# # show dividends
+# msft.dividends
 #
-# conn.request("GET", "/v8/finance/spark?symbols=MSFT&range=1d&interval=5m", headers=headers)
+# # show splits
+# msft.splits
 #
-# res = conn.getresponse()
-# data = res.read()
+# # show financials
+# msft.financials
+# msft.quarterly_financials
 #
-# print(data.decode("utf-8"))
+# # show major holders
+# msft.major_holders
+#
+# # show institutional holders
+# msft.institutional_holders
+#
+# # show balance sheet
+# msft.balance_sheet
+# msft.quarterly_balance_sheet
+#
+# # show cashflow
+# msft.cashflow
+# msft.quarterly_cashflow
+#
+# # show earnings
+# msft.earnings
+# msft.quarterly_earnings
+#
+# # show sustainability
+# msft.sustainability
+#
+# # show analysts recommendations
+# msft.recommendations
+#
+# # show next event (earnings, etc)
+# msft.calendar
+#
+# # show ISIN code - *experimental*
+# # ISIN = International Securities Identification Number
+# msft.isin
+#
+# # show options expirations
+# msft.options
+#
+# # get option chain for specific expiration
+# opt = msft.option_chain('YYYY-MM-DD')
+# data available via: opt.calls, opt.puts
