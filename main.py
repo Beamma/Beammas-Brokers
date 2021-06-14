@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import insert
 from config import Config
@@ -9,35 +9,41 @@ app.config.from_object(Config)  # applying all config to app
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
 db = SQLAlchemy(app)
-
 import models
 
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    result = models.User.query.all()
-    # print(result)
-    return render_template("home.html", result = result)
+    return render_template("home.html", status = session.get('login', None))
 
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('login', None) != 0:
+        return redirect(url_for('home', status = session.get('login', None)))
     if request.method == "POST":
 
         email = request.form.get("email")
         # password = models.check_password(request.form.get("password"))
-        password = models.User.query.filter_by(email=email).first()
-        print(check_password_hash(password.password, request.form.get("password")))
-        return render_template("login.html")
+        user = models.User.query.filter_by(email=email).first()
+        print(check_password_hash(user.password, request.form.get("password")))
+        if check_password_hash(user.password, request.form.get("password")) is True:
+            session['login'] = user.id
+            return redirect(url_for('home', status = session.get('login', None)))
+        else:
+            session['login'] = 0
+            return redirect(url_for('login', status = session.get('login', None)))
     else:
-        return render_template("login.html")
+        return render_template("login.html", status = session.get('login', None))
 
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if session.get('login', None) != 0:
+        return redirect(url_for('home', status = session.get('login', None)))
     if request.method == "POST":
 
         # Retreive User And Password, Hash Password
@@ -45,9 +51,21 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('home', status = session.get('login', None)))
     else:
-        return render_template("register.html")
+        return render_template("register.html", status = session.get('login', None))
+
+
+
+@app.route('/user', methods=['GET', 'POST'])
+def user():
+    if session.get('login', None) == 0:
+        return redirect(url_for('home', status = session.get('login', None)))
+    if request.method == "POST":
+        session['login'] = 0
+        return redirect(url_for('home', status = session.get('login', None)))
+    else:
+        return render_template('user.html', status = session.get('login', None))
 
 
 
