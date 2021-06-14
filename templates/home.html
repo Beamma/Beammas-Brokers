@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class = "content">
-  <a href = "{{ url_for('home') }}"> Home </a>
-</div>
+  {% for stocks in stock_info %}
+    <a href = "{{ url_for('stock', id = stocks.id) }}"> {{ stocks.name }} </a>
+  {% endfor %}
 {% endblock %}

@@ -19,8 +19,8 @@ import models
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-
-    return render_template("home.html", status = session.get('login', None))
+    stock_info = models.Stock.query.all()
+    return render_template("home.html", status = session.get('login', None), stock_info=stock_info)
 
 
 
