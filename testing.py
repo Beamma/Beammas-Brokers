@@ -14,6 +14,7 @@ res = conn.getresponse()
 data = res.read()
 
 stocks = data.decode("utf-8")
+print(stocks)
 dictionary = json.loads(stocks)
 appl = dictionary.get("AAPL")
 times = appl.get("timestamp")
