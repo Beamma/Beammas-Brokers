@@ -21,7 +21,11 @@ def login():
     if request.method == "POST":
 
         user_name = request.form.get("user_name")
-        password = models.check_password(request.form.get("password"))
+        password = models
+
+
+
+        .check_password(request.form.get("password"))
         print(password)
         return render_template("login.html")
     else:
