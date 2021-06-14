@@ -47,10 +47,21 @@ def register():
     if request.method == "POST":
 
         # Retreive User And Password, Hash Password
-        user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=request.form.get("email"), ird='0', address='0', bank='0', card='0', balance='0')
+        email = request.form.get("email")
+        user = models.User.query.all()
+        for user in user:
+            print(email, user.email)
+            if email == user.email:
+                print("Match")
+                return redirect(url_for('register', status = session.get('login', None)))
+
+
+        user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, ird='0', address='0', bank='0', card='0', balance='0')
         db.session.add(user)
         db.session.commit()
 
+        user = models.User.query.filter_by(email=email).first()
+        session['login'] = user.id
         return redirect(url_for('home', status = session.get('login', None)))
     else:
         return render_template("register.html", status = session.get('login', None))
