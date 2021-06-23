@@ -26,10 +26,11 @@ def home():
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
+    period = request.form.get("period")
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
     ticker = yf.Ticker(symbol)
-    history = ticker.history(period="1y")
+    history = ticker.history(period=period)
     stock_history = []
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
