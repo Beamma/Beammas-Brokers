@@ -35,7 +35,7 @@ def stock(symbol):
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
-    return render_template('stock.html', status = session.get('login', None), stock = stock_history)
+    return render_template('stock.html', status = session.get('login', None), stock = stock_history, stock_info = stock_info)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
