@@ -1,0 +1,14 @@
+.stock {
+  width: 25%;
+  margin: 0px;
+  float: left;
+}
+
+.stock_image  {
+  width: 100%;
+  text-align: center;
+}
+
+.stock_name {
+  text-align: center;
+}

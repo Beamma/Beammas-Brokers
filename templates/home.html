@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
   {% for stocks in stock_info %}
-    <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> {{ stocks.name }} </a>
+    <div class="stock">
+      <div class="stock_image">
+        <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> <img src = "static\{{ stocks.logo }}.png" alt = "img" > </a>
+      </div>
+      <div class="stock_name">
+        <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> {{ stocks.name }} </a>
+      </div>
+    </div>
   {% endfor %}
 {% endblock %}
