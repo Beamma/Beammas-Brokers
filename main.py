@@ -17,6 +17,8 @@ import models
 
 
 
+
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     stock_info = models.Stock.query.all()
@@ -24,18 +26,28 @@ def home():
 
 
 
+
+
+
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
+    periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
     period = request.form.get("period")
+    interval = periods[period]
+    print(interval)
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
     ticker = yf.Ticker(symbol)
-    history = ticker.history(period=period)
+    history = ticker.history(period=period, interval=periods[period])
     stock_history = []
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
     return render_template('stock.html', status = session.get('login', None), stock = stock_history, stock_info = stock_info)
+
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,6 +67,9 @@ def login():
             return redirect(url_for('login', status = session.get('login', None)))
     else:
         return render_template("login.html", status = session.get('login', None))
+
+
+
 
 
 
@@ -86,6 +101,9 @@ def register():
 
 
 
+
+
+
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     if session.get('login', None) == 0:
@@ -95,6 +113,9 @@ def user():
         return redirect(url_for('home', status = session.get('login', None)))
     else:
         return render_template('user.html', status = session.get('login', None))
+
+
+
 
 
 
