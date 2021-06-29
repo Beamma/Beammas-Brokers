@@ -21,6 +21,9 @@ import models
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    if session.get('login', None) == 0:
+        return redirect(url_for('login', status = session.get('login', None)))
+
     stock_info = models.Stock.query.all()
     return render_template("home.html", status = session.get('login', None), stock_info=stock_info)
 
@@ -31,6 +34,8 @@ def home():
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
+    if session.get('login', None) == 0:
+        return redirect(url_for('login', status = session.get('login', None)))
     if request.method == "POST":
         periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
         period = request.form.get("period")
@@ -61,7 +66,9 @@ def login():
         email = request.form.get("email")
         # password = models.check_password(request.form.get("password"))
         user = models.User.query.filter_by(email=email).first()
-        print(check_password_hash(user.password, request.form.get("password")))
+        print(user)
+        if user is None:
+            return redirect(url_for('login', status = session.get('login', None)))
         if check_password_hash(user.password, request.form.get("password")) is True:
             session['login'] = user.id
             return redirect(url_for('home', status = session.get('login', None)))
@@ -110,7 +117,7 @@ def register():
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     if session.get('login', None) == 0:
-        return redirect(url_for('home', status = session.get('login', None)))
+        return redirect(url_for('login', status = session.get('login', None)))
     if request.method == "POST":
         session['login'] = 0
         return redirect(url_for('home', status = session.get('login', None)))
