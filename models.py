@@ -26,4 +26,11 @@ class Stock(db.Model):
     market = db.Column(db.String(), nullable=False)
     category = db.Column(db.String(), nullable=False)
 
+class Owned_stock(db.model):
+    __tablename__ = 'owned_stock'
+    stock_id = db.Column(db.Integer, foreign_key=True, nullable=False)
+    user_id = db.Column(db.Integer, foreign_key=True, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    purchase_price = db.Column(db.Integer, nullable=False)
+    DOP = db.Column(db.DateTime, nullable=False)
 # db.create_all(extend_existing=True)

@@ -66,7 +66,6 @@ def login():
         email = request.form.get("email")
         # password = models.check_password(request.form.get("password"))
         user = models.User.query.filter_by(email=email).first()
-        print(user)
         if user is None:
             return redirect(url_for('login', status = session.get('login', None)))
         if check_password_hash(user.password, request.form.get("password")) is True:
