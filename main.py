@@ -31,14 +31,17 @@ def home():
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
-    periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
-    period = request.form.get("period")
-    interval = periods[period]
-    print(interval)
+    if request.method == "POST":
+        periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
+        period = request.form.get("period")
+        interval = periods[period]
+    else:
+        period = 'max'
+        interval = '1d'
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
     ticker = yf.Ticker(symbol)
-    history = ticker.history(period=period, interval=periods[period])
+    history = ticker.history(period=period, interval=interval)
     stock_history = []
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
