@@ -1,7 +1,7 @@
 from main import db
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
@@ -12,11 +12,12 @@ class User(db.Model):
     card = db.Column(db.Integer, nullable=False, default=0)
     balance = db.Column(db.Integer, nullable=False, default=0)
 
+    stocks = db.relationship('Portfolio', back_populates='user')
     def __repr__(self):
         return f'<User {self.id, self.name, self.email, self.password, self.ird, self.address, self.bank, self.card, self.balance}>'
 
 class Stock(db.Model):
-    __tablename__ = 'stock'
+    __tablename__ = 'Stock'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(), nullable=False)
     logo = db.Column(db.String(), nullable=False)
@@ -26,11 +27,17 @@ class Stock(db.Model):
     market = db.Column(db.String(), nullable=False)
     category = db.Column(db.String(), nullable=False)
 
-class Owned_stock(db.model):
-    __tablename__ = 'owned_stock'
-    stock_id = db.Column(db.Integer, foreign_key=True, nullable=False)
-    user_id = db.Column(db.Integer, foreign_key=True, nullable=False)
+    users = db.relationship('Portfolio', back_populates='stock')
+
+class Portfolio(db.Model):
+    __tablename__ = 'Portfolio'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     purchase_price = db.Column(db.Integer, nullable=False)
-    DOP = db.Column(db.DateTime, nullable=False)
+    purchase_date = db.Column(db.DateTime, nullable=False)
+
+    stock = db.relationship('Stock', back_populates='users')
+    user = db.relationship('User', back_populates='stocks')
 # db.create_all(extend_existing=True)
