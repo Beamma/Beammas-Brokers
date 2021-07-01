@@ -42,8 +42,11 @@
         <option value="1d">1 Day</option>
         <option value="1h">1 Hour</option>
       </select>
-      <input type="submit"></input>
+      <input type="submit" id="submit"></input>
     </form>
+  </div>
+  <div class="trade">
+    <a href = "{{ url_for('trade', symbol = stock_info.symbol) }}"> Trade </a>
   </div>
   <div class="info">
     <h1>{{ stock_info.name }}</h1>

@@ -56,6 +56,16 @@ def stock(symbol):
 
 
 
+@app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
+def trade(symbol):
+    if session.get('login', None) == 0:
+        return redirect(url_for('login', status = session.get('login', None)))
+    else:
+        return render_template('trade.html', status = session.get('login', None))
+
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
