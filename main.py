@@ -61,6 +61,10 @@ def trade(symbol):
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
+        stock_info = models.Stock.query.filter_by(symbol=symbol).first()
+        ticker = yf.Ticker(symbol)
+
+
         return render_template('trade.html', status = session.get('login', None))
 
 
