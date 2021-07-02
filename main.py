@@ -63,9 +63,13 @@ def trade(symbol):
     else:
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
         ticker = yf.Ticker(symbol)
-
-
-        return render_template('trade.html', status = session.get('login', None))
+        history = ticker.history(period="1h", interval="1h")
+        stock_history = []
+        for index in history.index:
+            date_price = [index, history.loc[index]['Close']]
+            stock_history.append(date_price)
+        stock_price = stock_history[-1][1]
+        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price)
 
 
 
