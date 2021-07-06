@@ -1,3 +1,10 @@
 <!DOCTYPE html>
 {% include 'nav.html' %}
 {{ stock_price }}
+<form method="POST">
+  <select name="period" id="period" placeholder = "Buy/Sell">
+    <option value="buy">Buy</option>
+    <option value="sell">Sell</option>
+  </select>
+  <input type="submit"></input>
+</form>
