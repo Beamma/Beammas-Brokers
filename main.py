@@ -69,6 +69,12 @@ def trade(symbol):
             date_price = [index, history.loc[index]['Close']]
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
+        if request.method == "POST":
+            if request.form.get("trade") == "buy":
+                stock = models.Stock.query.filter_by(symbol=symbol).all()
+                trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=1, purchase_price=stock_price, purchase_date=0)
+                db.session.add(trade)
+                db.session.commit()
         return render_template('trade.html', status = session.get('login', None), stock_price = stock_price)
 
 

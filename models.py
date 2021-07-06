@@ -36,7 +36,7 @@ class Portfolio(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     purchase_price = db.Column(db.Integer, nullable=False)
-    purchase_date = db.Column(db.DateTime, nullable=False)
+    purchase_date = db.Column(db.Integer, nullable=False)
 
     stock = db.relationship('Stock', back_populates='users')
     user = db.relationship('User', back_populates='stocks')
