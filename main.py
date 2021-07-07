@@ -20,8 +20,11 @@ import models
 
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    if session.get('login', None) == None:
+        session['login'] = 0
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
 
@@ -144,10 +147,14 @@ def user():
         return redirect(url_for('login', status = session.get('login', None)))
     else:
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
-        return render_template('user.html', status = session.get('login', None), portfolio=portfolio)
-        if request.method == "POST":
-            session['login'] = 0
-            return redirect(url_for('home', status = session.get('login', None)))
+        stock = []
+        for i in range(len(portfolio)):
+            stock.append([portfolio[i].stock, portfolio[i].amount ])
+        print(stock)
+        return render_template('user.html', status = session.get('login', None), portfolio=portfolio, stock=stock)
+    if request.method == "POST":
+        session['login'] = 0
+        return redirect(url_for('home', status = session.get('login', None)))
 
 
 
