@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import http.client
 import json
 import yfinance as yf
+import datetime
 
 
 app = Flask(__name__)
@@ -72,7 +73,7 @@ def trade(symbol):
         if request.method == "POST":
             if request.form.get("trade") == "buy":
                 stock = models.Stock.query.filter_by(symbol=symbol).all()
-                trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=1, purchase_price=stock_price, purchase_date=0)
+                trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
                 db.session.add(trade)
                 db.session.commit()
         return render_template('trade.html', status = session.get('login', None), stock_price = stock_price)
