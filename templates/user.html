@@ -4,14 +4,12 @@
   <form method="POST">
     <input type="submit" name="LogOut" value="LogOut">
   </form>
-  {% for stocks in portfolio %}
-    {{ stocks.amount }}
-  {% endfor %}
-  {% for stock in stock %}
+  <!-- {% for stock in stock %}
     {% for stock_info in stock %}
       {{ stock_info }}
     {% endfor %}
-  {% endfor %}
+  {% endfor %} -->
+  {{ stock }}
 
 </div>
 {% endblock %}

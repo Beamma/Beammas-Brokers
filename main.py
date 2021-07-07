@@ -143,18 +143,22 @@ def register():
 
 @app.route('/user', methods=['GET', 'POST'])
 def user():
+    if request.method == "POST":
+        session['login'] = 0
+        return redirect(url_for('home', status = session.get('login', None)))
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
-        stock = []
+        stocks = []
         for i in range(len(portfolio)):
-            stock.append([portfolio[i].stock, portfolio[i].amount ])
+            stock_info = []
+            stock_info.append(portfolio[i].stock.name)
+            stock_info.append(portfolio[i].stock.symbol)
+            stock_info.append(portfolio[i].amount)
+            stocks.append(stock_info)
         print(stock)
         return render_template('user.html', status = session.get('login', None), portfolio=portfolio, stock=stock)
-    if request.method == "POST":
-        session['login'] = 0
-        return redirect(url_for('home', status = session.get('login', None)))
 
 
 
