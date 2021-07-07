@@ -142,11 +142,12 @@ def register():
 def user():
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
-    if request.method == "POST":
-        session['login'] = 0
-        return redirect(url_for('home', status = session.get('login', None)))
     else:
-        return render_template('user.html', status = session.get('login', None))
+        portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
+        return render_template('user.html', status = session.get('login', None), portfolio=portfolio)
+        if request.method == "POST":
+            session['login'] = 0
+            return redirect(url_for('home', status = session.get('login', None)))
 
 
 

@@ -4,5 +4,8 @@
   <form method="POST">
     <input type="submit" name="LogOut" value="LogOut">
   </form>
+  {% for stocks in portfolio %}
+  {{ stocks.stock_id }} {{ stocks.amount }}
+  {% endfor %}
 </div>
 {% endblock %}
