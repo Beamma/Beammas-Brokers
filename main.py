@@ -158,7 +158,7 @@ def user():
             stock_info.append(portfolio[i].amount)
             stocks.append(stock_info)
         print(stock)
-        return render_template('user.html', status = session.get('login', None), portfolio=portfolio, stock=stock)
+        return render_template('user.html', status = session.get('login', None), portfolio=portfolio, stocks=stocks)
 
 
 

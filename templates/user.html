@@ -4,12 +4,19 @@
   <form method="POST">
     <input type="submit" name="LogOut" value="LogOut">
   </form>
-  <!-- {% for stock in stock %}
-    {% for stock_info in stock %}
-      {{ stock_info }}
-    {% endfor %}
-  {% endfor %} -->
-  {{ stock }}
-
+  <table style="width:100%">
+    <tr>
+      <th>Stock</th>
+      <th>Ticker</th>
+      <th>Owned Stocks</th>
+    </tr>
+      {% for stock in stocks %}
+      <tr>
+        <td> {{ stock[0] }} </td>
+        <td> {{ stock[1] }} </td>
+        <td> {{ stock[2] }} </td>
+      </tr>
+      {% endfor %}
+  </table>
 </div>
 {% endblock %}
