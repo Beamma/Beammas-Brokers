@@ -10,7 +10,7 @@ class User(db.Model):
     address = db.Column(db.String(), nullable=False)
     bank = db.Column(db.Integer, nullable=False, default=0)
     card = db.Column(db.Integer, nullable=False, default=0)
-    balance = db.Column(db.Integer, nullable=False, default=0)
+    balance = db.Column(db.Integer, nullable=False, default=1000)
 
     stocks = db.relationship('Portfolio', back_populates='user')
     def __repr__(self):

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% include 'nav.html' %}
-{{ stock_price }}
+Stock Price: <b> {{ stock_price }} </b>
+User Balance: <b> {{ user_balance }} </b>
 <form method="POST">
   <select name="trade" id="trade">
     <option value="buy">Buy</option>

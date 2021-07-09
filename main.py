@@ -65,6 +65,8 @@ def trade(symbol):
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
+        user_info = models.User.query.filter_by(id=session.get('login', None)).first()
+        user_balance = user_info.balance
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
         ticker = yf.Ticker(symbol)
         history = ticker.history(period="1h", interval="1h")
@@ -79,7 +81,7 @@ def trade(symbol):
                 trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
                 db.session.add(trade)
                 db.session.commit()
-        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price)
+        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance)
 
 
 
