@@ -77,10 +77,17 @@ def trade(symbol):
         stock_price = stock_history[-1][1]
         if request.method == "POST":
             if request.form.get("trade") == "buy":
-                stock = models.Stock.query.filter_by(symbol=symbol).all()
-                trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
-                db.session.add(trade)
-                db.session.commit()
+                if user_balance >= int(request.form.get("amount")) * int(stock_price):
+                    stock = models.Stock.query.filter_by(symbol=symbol).all()
+                    trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
+                    db.session.add(trade)
+                    db.session.commit()
+                    user_info.balance -= int(request.form.get("amount")) * int(stock_price)
+                    db.session.commit()
+
+                else:
+                    print("Failed")
+
         return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance)
 
 
