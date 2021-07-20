@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-{% include 'nav.html' %}
-Stock Price: <b> {{ stock_price }} </b>
-User Balance: <b> {{ user_balance }} </b>
-<form method="POST">
-  <select name="trade" id="trade">
-    <option value="buy">Buy</option>
-    <option value="sell">Sell</option>
-  </select>
-  <input type="number"  name="amount">Number Of Shares</input>
-  <input type="submit"></input>
-</form>
+{% extends 'layout.html' %}
+{% block content %}
+  Stock Price: <b> {{ stock_price }} </b>
+  User Balance: <b> {{ user_balance }} </b>
+  <form method="POST">
+    <select name="trade" id="trade">
+      <option value="buy">Buy</option>
+      <option value="sell">Sell</option>
+    </select>
+    <input type="number"  name="amount">Number Of Shares</input>
+    <input type="submit"></input>
+  </form>
+{% endblock %}

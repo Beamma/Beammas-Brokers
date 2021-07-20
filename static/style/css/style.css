@@ -1,16 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Zen+Tokyo+Zoo&display=swap');
+
+body{
+  background-color: white;
+  margin: 0px;
+}
+
+nav{
+  font-family: 'Oswald', sans-serif;
+  font-size: 300%;
+  background-color: rgb(48 49 52);
+  height: 12vh;
+}
+
+nav a{
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  color: rgb(243 63 249);
+  float: none;
+}
+
+nav a:hover{
+  background-color: grey;
+}
 .stock {
-  width: 25%;
+  width: 12.5%;
   margin: 0px;
   float: left;
 }
 
-.stock_image  {
-  width: 100%;
+.stock_image {
   text-align: center;
+}
+
+.stock_image  img{
+  width: 50%;
 }
 
 .stock_name {
   text-align: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 100%;
+  width: 100%;
+}
+
+.stock_name a{
+  text-decoration: none;
+  color: rgb(48 49 52);
+}
+
+.stock_name a:hover {
+  text-decoration: underline;
+  color: rgb(243 63 249);
 }
 
 table {
