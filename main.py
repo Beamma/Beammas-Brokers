@@ -82,11 +82,13 @@ def trade(symbol):
                     trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
                     db.session.add(trade)
                     db.session.commit()
-                    user_info.balance -= int(request.form.get("amount")) * int(stock_price)
+                    user_balance = user_balance - int(request.form.get("amount")) * int(stock_price)
+                    user_info.balance = user_balance
                     db.session.commit()
-
                 else:
                     print("Failed")
+            if request.form.get("trade") == "sell":
+                print("sell")
 
         return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance)
 
