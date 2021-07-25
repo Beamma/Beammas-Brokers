@@ -79,11 +79,12 @@ def trade(symbol):
             if request.form.get("trade") == "buy":
                 if user_balance >= int(request.form.get("amount")) * int(stock_price):
                     stock = models.Stock.query.filter_by(symbol=symbol).all()
-                    trade = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
+                    trade = models.Purchase_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
                     db.session.add(trade)
                     db.session.commit()
                     user_balance = user_balance - int(request.form.get("amount")) * int(stock_price)
                     user_info.balance = user_balance
+                    db.session.merge(user_info)
                     db.session.commit()
                 else:
                     print("Failed")
@@ -160,16 +161,16 @@ def user():
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
-        portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
+        Purchase_Info = models.Purchase_Info.query.filter_by(user_id=session.get('login', None)).all()
         stocks = []
-        for i in range(len(portfolio)):
+        for i in range(len(Purchase_Info)):
             stock_info = []
-            stock_info.append(portfolio[i].stock.name)
-            stock_info.append(portfolio[i].stock.symbol)
-            stock_info.append(portfolio[i].amount)
+            stock_info.append(Purchase_Info[i].stock.name)
+            stock_info.append(Purchase_Info[i].stock.symbol)
+            stock_info.append(Purchase_Info[i].amount)
             stocks.append(stock_info)
         print(stock)
-        return render_template('user.html', status = session.get('login', None), portfolio=portfolio, stocks=stocks)
+        return render_template('user.html', status = session.get('login', None), Purchase_Info=Purchase_Info, stocks=stocks)
 
 
 
