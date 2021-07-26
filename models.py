@@ -13,6 +13,9 @@ class User(db.Model):
     balance = db.Column(db.Integer, nullable=False, default=1000)
 
     stocks = db.relationship('Purchase_Info', back_populates='user')
+
+
+    stocks_portfolio = db.relationship('Portfolio', back_populates='user')
     def __repr__(self):
         return f'<User {self.id, self.name, self.email, self.password, self.ird, self.address, self.bank, self.card, self.balance}>'
 
@@ -28,6 +31,7 @@ class Stock(db.Model):
     category = db.Column(db.String(), nullable=False)
 
     users = db.relationship('Purchase_Info', back_populates='stock')
+    user_portfolio = db.relationship('Portfolio', back_populates='stock')
 
 class Purchase_Info(db.Model):
     __tablename__ = 'Purchase_Info'
@@ -42,6 +46,8 @@ class Purchase_Info(db.Model):
     user = db.relationship('User', back_populates='stocks')
 # db.create_all(extend_existing=True)
 
+
+
 class Portfolio(db.Model):
     __tablename__ = 'Portfolio'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -49,5 +55,5 @@ class Portfolio(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
 
-    stock = db.relationship('Stock', back_populates='users')
-    user = db.relationship('User', back_populates='stocks')
+    stock = db.relationship('Stock', back_populates='user_portfolio')
+    user = db.relationship('User', back_populates='stocks_portfolio')

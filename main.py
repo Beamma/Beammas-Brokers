@@ -81,7 +81,8 @@ def trade(symbol):
                     stock = models.Stock.query.filter_by(symbol=symbol).all()
                     trade = models.Purchase_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
                     db.session.add(trade)
-                    db.session.commit()
+                    portfolio = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"))
+                    db.session.add(portfolio)
                     user_balance = user_balance - int(request.form.get("amount")) * int(stock_price)
                     user_info.balance = user_balance
                     db.session.merge(user_info)

@@ -6,5 +6,3 @@ DEBUG: file: None
 DEBUG: pause: True
 DEBUG: repl: python
 DEBUG: args: ['C:\\Users\\17141\\github\\Beammas-Brokers\\main.py']
-INFO: return code: 1 (0x1)
-INFO: elapsed time: 0.968175
