@@ -174,16 +174,15 @@ def user():
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
-        Purchase_Info = models.Purchase_Info.query.filter_by(user_id=session.get('login', None)).all()
+        Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
         stocks = []
-        for i in range(len(Purchase_Info)):
+        for i in range(len(Portfolio)):
             stock_info = []
-            stock_info.append(Purchase_Info[i].stock.name)
-            stock_info.append(Purchase_Info[i].stock.symbol)
-            stock_info.append(Purchase_Info[i].amount)
+            stock_info.append(Portfolio[i].stock.name)
+            stock_info.append(Portfolio[i].amount)
             stocks.append(stock_info)
         print(stock)
-        return render_template('user.html', status = session.get('login', None), Purchase_Info=Purchase_Info, stocks=stocks)
+        return render_template('user.html', status = session.get('login', None), Portfolio=Portfolio, stocks=stocks)
 
 
 
