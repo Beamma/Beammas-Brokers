@@ -54,6 +54,7 @@ class Portfolio(db.Model):
     stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
+    total_purchase_price =db.Column(db.Integer, nullable=False)
 
     stock = db.relationship('Stock', back_populates='user_portfolio')
     user = db.relationship('User', back_populates='stocks_portfolio')

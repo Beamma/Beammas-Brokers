@@ -83,19 +83,21 @@ def trade(symbol):
 
                     db.session.add(trade)
                     existing_stock = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
-
+                    purchase_price = int(request.form.get("amount")) * stock_price
                     # Update Portfolio DB Amount If Required
                     if existing_stock:
                         new_amount = int(existing_stock.amount) + int(request.form.get("amount"))
+                        new_total_purchase_price = purchase_price + existing_stock.total_purchase_price
                         existing_stock.amount = new_amount
+                        existing_stock.total_purchase_price = new_total_purchase_price
                         db.session.merge(existing_stock)
                     else:
                         print("none")
-                        portfolio = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"))
+                        portfolio = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), total_purchase_price=purchase_price)
                         db.session.add(portfolio)
 
                     # Update User Balance (Subtract Price * Amount)
-                    user_balance = user_balance - int(request.form.get("amount")) * int(stock_price)
+                    user_balance = user_balance - purchase_price
                     user_info.balance = user_balance
                     db.session.merge(user_info)
                     db.session.commit()
