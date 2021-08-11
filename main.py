@@ -133,7 +133,6 @@ def login():
     if request.method == "POST":
 
         email = request.form.get("email")
-        # password = models.check_password(request.form.get("password"))
         user = models.User.query.filter_by(email=email).first()
         if user is None:
             return redirect(url_for('login', status = session.get('login', None)))
