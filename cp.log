@@ -6,3 +6,4 @@ DEBUG: file: None
 DEBUG: pause: True
 DEBUG: repl: python
 DEBUG: args: ['C:\\Users\\17141\\github\\Beammas-Brokers\\main.py']
+INFO: return code: 3221225786 (0xc000013a)

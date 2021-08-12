@@ -110,7 +110,10 @@ def trade(symbol):
                 amount = int(request.form.get("amount"))
                 portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
                 print(portfolio)
-                if portfolio.amount >= amount:
+                if portfolio.amount == amount:
+                    models.Portfolio.query.filter_by(id=portfolio.id).delete()
+                    db.session.commit()
+                if portfolio.amount > amount:
                     portfolio.amount = int(portfolio.amount) - int(amount)
                     db.session.merge(portfolio)
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
