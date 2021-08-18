@@ -1,12 +1,13 @@
-# import yfinance as yf
+import yfinance as yf
 #
-# msft = yf.Ticker("MSFT")
-
+msft = yf.Ticker("MSFT")
+# print(msft)
 # get stock info
-# msft.info
+# print(msft.info)
 
 # get historical market data
-# history = msft.history(period="1y")
+history = msft.history(period="1y")
+print(history)
 # stock_history = []
 # for index in history.index:
 #     date_price = [index, history.loc[index]['Close']]

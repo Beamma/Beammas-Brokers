@@ -49,7 +49,9 @@ def stock(symbol):
         interval = '1d'
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
+    print(symbol)
     ticker = yf.Ticker(symbol)
+    print(ticker)
     history = ticker.history(period=period, interval=interval)
     stock_history = []
     for index in history.index:
