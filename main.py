@@ -112,10 +112,13 @@ def trade(symbol):
                 amount = int(request.form.get("amount"))
                 portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
                 print(portfolio)
-                # if portfolio.amount == amount:
-                #     models.Portfolio.query.filter_by(id=portfolio.id).delete()
-                #     db.session.flush()
-                if portfolio.amount >=  amount:
+                if portfolio.amount == amount:
+                    print("Sell All")
+                    db.session.delete(db.session.merge(portfolio))
+                    user_info.balance = user_balance + (int(amount) * int(stock_price))
+                    db.session.merge(user_info)
+                    db.session.commit()
+                if portfolio.amount >  amount:
                     portfolio.amount = int(portfolio.amount) - int(amount)
                     db.session.merge(portfolio)
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
@@ -195,18 +198,13 @@ def user():
         return redirect(url_for('login', status = session.get('login', None)))
     else:
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
-        for i in range(len(Portfolio)):
-            if Portfolio[i].amount == 0:
-                # models.Portfolio.query.filter_by(id=Portfolio[i].id).delete()
-                db.session.delete(Portfolio[i])
-                db.session.commit()
         stocks = []
         for i in range(len(Portfolio)):
             stock_info = []
             stock_info.append(Portfolio[i].stock.name)
             stock_info.append(Portfolio[i].amount)
             stocks.append(stock_info)
-        return render_template('user.html', status = session.get('login', None), Portfolio=Portfolio, stocks=stocks)
+        return render_template('user.html', status = session.get('login', None), stocks=stocks)
 
 
 
