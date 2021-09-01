@@ -224,6 +224,7 @@ def user():
             # Calculate Actual ROI (Return On Investment)
             ROI = format((((Portfolio[i].amount * stock_price) - Portfolio[i].total_purchase_price)/Portfolio[i].total_purchase_price) * 100, '.2f')
             stock_info.append(ROI)
+            stock_info.append(stock.symbol)
             stocks.append(stock_info)
         return render_template('user.html', status = session.get('login', None), stocks=stocks)
 
