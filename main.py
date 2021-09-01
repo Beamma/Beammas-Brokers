@@ -70,6 +70,8 @@ def trade(symbol):
         user_info = models.User.query.filter_by(id=session.get('login', None)).first()
         user_balance = user_info.balance
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
+
+        # Get Latest Price (Imporvement Needed
         ticker = yf.Ticker(symbol)
         history = ticker.history(period="1h", interval="1h")
         stock_history = []
@@ -77,6 +79,8 @@ def trade(symbol):
             date_price = [index, history.loc[index]['Close']]
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
+
+
         if request.method == "POST":
             stock = models.Stock.query.filter_by(symbol=symbol).all()
             if request.form.get("trade") == "buy":
@@ -120,6 +124,7 @@ def trade(symbol):
                     db.session.commit()
                 if portfolio.amount >  amount:
                     portfolio.amount = int(portfolio.amount) - int(amount)
+                    portfolio.total_purchase_price = portfolio.total_purchase_price - (int(amount) * int(stock_price))
                     db.session.merge(portfolio)
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)
@@ -203,6 +208,22 @@ def user():
             stock_info = []
             stock_info.append(Portfolio[i].stock.name)
             stock_info.append(Portfolio[i].amount)
+
+            # Calculate Percentage Increase
+
+            # Get Current Stock Price
+            stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
+            ticker = yf.Ticker(stock.symbol)
+            history = ticker.history(period="1h", interval="1h")
+            stock_history = []
+            for index in history.index:
+                date_price = [index, history.loc[index]['Close']]
+                stock_history.append(date_price)
+            stock_price = stock_history[-1][1]
+
+            # Calculate Actual ROI (Return On Investment)
+            ROI = format((((Portfolio[i].amount * stock_price) - Portfolio[i].total_purchase_price)/Portfolio[i].total_purchase_price) * 100, '.2f')
+            stock_info.append(ROI)
             stocks.append(stock_info)
         return render_template('user.html', status = session.get('login', None), stocks=stocks)
 
