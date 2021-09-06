@@ -71,7 +71,7 @@ def trade(symbol):
         user_balance = user_info.balance
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
 
-        # Get Latest Price (Imporvement Needed
+        # Get Latest Price (Imporvement Needed)
         ticker = yf.Ticker(symbol)
         history = ticker.history(period="1h", interval="1h")
         stock_history = []
@@ -204,6 +204,8 @@ def user():
     else:
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
         stocks = []
+        portfolio_value = 0
+        portfolio_purchase_price = 0
         for i in range(len(Portfolio)):
             stock_info = []
             stock_info.append(Portfolio[i].stock.name)
@@ -221,12 +223,16 @@ def user():
                 stock_history.append(date_price)
             stock_price = stock_history[-1][1]
 
-            # Calculate Actual ROI (Return On Investment)
+            # Calculate Actual ROI (Return On Investment) For Each Stock
             ROI = format((((Portfolio[i].amount * stock_price) - Portfolio[i].total_purchase_price)/Portfolio[i].total_purchase_price) * 100, '.2f')
             stock_info.append(ROI)
             stock_info.append(stock.symbol)
             stocks.append(stock_info)
-        return render_template('user.html', status = session.get('login', None), stocks=stocks)
+            portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
+            portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
+            net_profit = portfolio_value - portfolio_purchase_price
+            total_ROI = 100 * net_profit / portfolio_purchase_price
+        return render_template('user.html', status = session.get('login', None), stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'))
 
 
 

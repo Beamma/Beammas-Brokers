@@ -24,5 +24,17 @@
       </tr>
       {% endfor %}
   </table>
+  <p>Portfolio Value: ${{ portfolio_value }}</p>
+  <p>Your Investment: ${{ portfolio_purchase_price }}</p>
+  <p>Net Profit: ${{ net_profit }}</p>
+  {% if "-" in total_ROI: %}
+  <p> Net ROI: <b style="color:red;"">
+      {{ total_ROI }}%
+    </b></p>
+  {% else: %}
+  <p> Net ROI: <b style="color:green;">
+      {{ total_ROI }}%
+    </b></p>
+  {% endif %}
 </div>
 {% endblock %}
