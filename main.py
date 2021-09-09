@@ -121,6 +121,10 @@ def trade(symbol):
                     db.session.delete(db.session.merge(portfolio))
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)
+
+                    trade = models.Sold_Stock(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), sell_price=stock_price, sell_date=datetime.datetime.now())
+                    db.session.add(trade)
+
                     db.session.commit()
                 if portfolio.amount >  amount:
                     portfolio.amount = int(portfolio.amount) - int(amount)
@@ -128,6 +132,10 @@ def trade(symbol):
                     db.session.merge(portfolio)
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)
+
+                    trade = models.Sold_Stock(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), sell_price=stock_price, sell_date=datetime.datetime.now())
+                    db.session.add(trade)
+
                     db.session.commit()
                 else:
                     print("No")
