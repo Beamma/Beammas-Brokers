@@ -12,8 +12,8 @@ class User(db.Model):
     card = db.Column(db.Integer, nullable=False, default=0)
     balance = db.Column(db.Integer, nullable=False, default=1000)
 
-    stocks = db.relationship('Purchase_Info', back_populates='user')
-    stocks_sell = db.relationship('Sold_Stock', back_populates='user')
+    stocks = db.relationship('Trade_Info', back_populates='user')
+    # stocks_sell = db.relationship('Sold_Stock', back_populates='user')
     stocks_portfolio = db.relationship('Portfolio', back_populates='user')
 
     def __repr__(self):
@@ -30,34 +30,35 @@ class Stock(db.Model):
     market = db.Column(db.String(), nullable=False)
     category = db.Column(db.String(), nullable=False)
 
-    users = db.relationship('Purchase_Info', back_populates='stock')
+    users = db.relationship('Trade_Info', back_populates='stock')
     user_portfolio = db.relationship('Portfolio', back_populates='stock')
-    user_sell = db.relationship('Sold_Stock', back_populates='stock')
+    # user_sell = db.relationship('Sold_Stock', back_populates='stock')
 
-class Purchase_Info(db.Model):
-    __tablename__ = 'Purchase_Info'
+class Trade_Info(db.Model):
+    __tablename__ = 'Trade_Info'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    purchase_price = db.Column(db.Integer, nullable=False)
-    purchase_date = db.Column(db.DateTime, nullable=False)
+    trade_price = db.Column(db.Integer, nullable=False)
+    trade_date = db.Column(db.DateTime, nullable=False)
+    trade_type = db.Column(db.String(), nullable=False)
 
     stock = db.relationship('Stock', back_populates='users')
     user = db.relationship('User', back_populates='stocks')
 # db.create_all(extend_existing=True)
 
-class Sold_Stock(db.Model):
-    __tablename__ = 'Sold_Stock'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
-    sell_price = db.Column(db.Integer, nullable=False)
-    sell_date = db.Column(db.DateTime, nullable=False)
-
-    stock = db.relationship('Stock', back_populates='user_sell')
-    user = db.relationship('User', back_populates='stocks_sell')
+# class Sold_Stock(db.Model):
+#     __tablename__ = 'Sold_Stock'
+#     id = db.Column(db.Integer, primary_key=True, nullable=False)
+#     stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
+#     amount = db.Column(db.Integer, nullable=False)
+#     sell_price = db.Column(db.Integer, nullable=False)
+#     sell_date = db.Column(db.DateTime, nullable=False)
+#
+#     stock = db.relationship('Stock', back_populates='user_sell')
+#     user = db.relationship('User', back_populates='stocks_sell')
 
 
 class Portfolio(db.Model):

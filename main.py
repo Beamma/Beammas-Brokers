@@ -80,12 +80,14 @@ def trade(symbol):
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
 
+        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).all()
+        print(recent_purchases)
 
         if request.method == "POST":
             stock = models.Stock.query.filter_by(symbol=symbol).all()
             if request.form.get("trade") == "buy":
                 if user_balance >= int(request.form.get("amount")) * int(stock_price):
-                    trade = models.Purchase_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), purchase_price=stock_price, purchase_date=datetime.datetime.now())
+                    trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Buy")
 
                     db.session.add(trade)
                     existing_stock = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
@@ -122,7 +124,7 @@ def trade(symbol):
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)
 
-                    trade = models.Sold_Stock(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), sell_price=stock_price, sell_date=datetime.datetime.now())
+                    trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Sell")
                     db.session.add(trade)
 
                     db.session.commit()
@@ -133,7 +135,7 @@ def trade(symbol):
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)
 
-                    trade = models.Sold_Stock(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), sell_price=stock_price, sell_date=datetime.datetime.now())
+                    trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Sell")
                     db.session.add(trade)
 
                     db.session.commit()
@@ -141,7 +143,7 @@ def trade(symbol):
                     print("No")
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance)
+        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
 
 
 
