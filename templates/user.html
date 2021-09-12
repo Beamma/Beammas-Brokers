@@ -36,5 +36,25 @@
       {{ total_ROI }}%
     </b></p>
   {% endif %}
+  <table style="width:100%">
+    <tr>
+      <th>Stock</th>
+      <th>Pruchase Type</th>
+      <th>Stock Traded</th>
+      <th>Trade Price</th>
+      <th> Trade Price Total </th>
+      <th>Trade Date</th>
+    </tr>
+    {% for trades in recent_purchases %}
+    <tr>
+      <td>{{ trades.stock_id }} </td>
+      <td>{{ trades.trade_type }} </td>
+      <td>{{ trades.amount }} </td>
+      <td>{{ trades.trade_price }} </td>
+      <td>{{ trades.trade_price * trades.amount }}
+      <td>{{ trades.trade_date }} </td>
+    </tr>
+    {% endfor %}
+  </table>
 </div>
 {% endblock %}

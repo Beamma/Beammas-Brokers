@@ -81,7 +81,7 @@ def trade(symbol):
         stock_price = stock_history[-1][1]
 
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).all()
-        print(recent_purchases)
+        # print(recent_purchases.order_by(recent_purchases.id.desc()))
 
         if request.method == "POST":
             stock = models.Stock.query.filter_by(symbol=symbol).all()
@@ -238,11 +238,14 @@ def user():
             stock_info.append(ROI)
             stock_info.append(stock.symbol)
             stocks.append(stock_info)
-            portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
-            portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
-            net_profit = portfolio_value - portfolio_purchase_price
-            total_ROI = 100 * net_profit / portfolio_purchase_price
-        return render_template('user.html', status = session.get('login', None), stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'))
+        portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
+        portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
+        net_profit = portfolio_value - portfolio_purchase_price
+        total_ROI = 100 * net_profit / portfolio_purchase_price
+
+        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).all()
+
+        return render_template('user.html', status = session.get('login', None), stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
 
 
