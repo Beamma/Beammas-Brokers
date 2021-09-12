@@ -47,7 +47,7 @@
     </tr>
     {% for trades in recent_purchases %}
     <tr>
-      <td>{{ trades.stock_id }} </td>
+      <td>{{ trades.stock.name }} </td>
       <td>{{ trades.trade_type }} </td>
       <td>{{ trades.amount }} </td>
       <td>{{ trades.trade_price }} </td>
