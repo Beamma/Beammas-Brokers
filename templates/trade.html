@@ -10,22 +10,21 @@
       <option value="sell">Sell</option>
     </select>
     <input type="number"  name="amount" id="user_input">Number Of Shares</input>
-  </form>
-  <!-- Trigger/Open The Modal -->
-  <button id="myBtn" >Submit</button>
+    <!-- Trigger/Open The Modal -->
+    <button type="button" id="myBtn" >Submit</button>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <!-- Display data -->
+        <p><span id='display'></span></p>
+        <p><span id='trade_display'></span></p>
+        <input type="submit"></input>
+      </div>
 
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <!-- Display data -->
-      <p><span id='display'></span></p>
-      <p><span id='trade_display'></span></p>
     </div>
-
-  </div>
+    </form>
   <script language="JavaScript">
 
       // Get the modal
@@ -51,7 +50,7 @@
         modal.style.display = "none";
       }
 
-      // When the user clicks anywhere outside of the modal, close it
+      When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
         if (event.target == modal) {
           modal.style.display = "none";
