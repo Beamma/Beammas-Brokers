@@ -143,7 +143,7 @@ def trade(symbol):
                     print("No")
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
+        return render_template('trade.html', status = session.get('login', None),stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
 
 
 

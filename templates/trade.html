@@ -18,8 +18,10 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <!-- Display data -->
-        <p><span id='display'></span></p>
-        <p><span id='trade_display'></span></p>
+        <p>Are you sure you want to <b><span id='display'></span></b>: <span id='trade_display'></span> {{ stock_info.name }} Stock</p>
+        <p>Stock Trade Price: <b>{{ stock_price }}</b></p>
+        <p>Total Trade Value: <b><span id='total_cost'></b></p>
+        <!-- <p>Total Trade Value: {{ stock_price }}</p> -->
         <input type="submit"></input>
       </div>
 
@@ -42,6 +44,8 @@
                     document.getElementById("trade").value;
         document.getElementById('trade_display').innerHTML =
                     document.getElementById("user_input").value;
+        document.getElementById('total_cost').innerHTML =
+                    document.getElementById("user_input").value *{{ stock_price }};
         modal.style.display = "block";
       }
 
