@@ -45,8 +45,8 @@ def stock(symbol):
         period = request.form.get("period")
         interval = periods[period]
     else:
-        period = 'max'
-        interval = '1d'
+        period = '7d'
+        interval = '30m'
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
     print(symbol)
