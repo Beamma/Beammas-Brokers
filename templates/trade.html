@@ -7,13 +7,21 @@
       <option value="buy">Buy</option>
       <option value="sell">Sell</option>
     </select>
-    <input type="number"  name="amount">Number Of Shares</input>
+    <input type="number"  name="amount" id="myInput">Number Of Shares</input>
     <input type="submit"></input>
   </form>
 
     <!-- Trigger/Open The Modal -->
-  <button id="myBtn">Open Modal</button>
+  <button id="myBtn" onclick="getInputValue();" >Open Modal</button>
+  <script>
+        function getInputValue(){
+            // Selecting the input element and get its value
+            var inputVal = document.getElementById("myInput").value;
 
+            // Displaying the value
+            alert(inputVal);
+        }
+    </script>
   <!-- The Modal -->
   <div id="myModal" class="modal">
 
@@ -25,7 +33,7 @@
 
   </div>
 
-  <script>
+  <!-- <script>
 // Get the modal
 var modal = document.getElementById("myModal");
 
@@ -51,7 +59,7 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-</script>
+</script> -->
 
   <table style="width:100%">
     <tr>
