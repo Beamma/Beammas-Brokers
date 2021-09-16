@@ -80,7 +80,7 @@ def trade(symbol):
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
 
-        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).all()
+        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).order_by(models.Trade_Info.id.desc()).all()
         # print(recent_purchases.order_by(recent_purchases.id.desc()))
 
         if request.method == "POST":
@@ -243,7 +243,7 @@ def user():
         net_profit = portfolio_value - portfolio_purchase_price
         total_ROI = 100 * net_profit / portfolio_purchase_price
 
-        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).all()
+        recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
 
         return render_template('user.html', status = session.get('login', None), stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
