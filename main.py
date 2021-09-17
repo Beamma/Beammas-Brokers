@@ -18,18 +18,22 @@ import models
 
 
 
-
-
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
+    if session.get('login', None) == None:
+        session['login'] = 0
+    return render_template("home.html")
+
+
+@app.route('/stock', methods=['GET', 'POST'])
+def all_stock():
     if session.get('login', None) == None:
         session['login'] = 0
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
 
     stock_info = models.Stock.query.all()
-    return render_template("home.html", status = session.get('login', None), stock_info=stock_info)
+    return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info)
 
 
 
