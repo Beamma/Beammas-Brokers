@@ -84,6 +84,9 @@ def trade(symbol):
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
 
+        portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
+        stocks_owned = portfolio.amount
+
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).order_by(models.Trade_Info.id.desc()).all()
         # print(recent_purchases.order_by(recent_purchases.id.desc()))
 
@@ -147,7 +150,7 @@ def trade(symbol):
                     print("No")
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None),stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
+        return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
 
 
 
@@ -216,6 +219,7 @@ def user():
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None)))
     else:
+        User = models.User.query.filter_by(id=session.get('login', None)).first()
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
         stocks = []
         portfolio_value = 0
@@ -249,7 +253,7 @@ def user():
 
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
 
-        return render_template('user.html', status = session.get('login', None), stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
+        return render_template('user.html', status = session.get('login', None), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
 
 
