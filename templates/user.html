@@ -9,6 +9,10 @@
     <tr>
       <th>Stock</th>
       <th>Amount</th>
+      <th>Stock Price</th>
+      <th>Investment</th>
+      <th>Value</th>
+      <th>Return</th>
       <th>ROI</th>
       <th>Trade</th>
     </tr>
@@ -16,12 +20,16 @@
       <tr>
         <td><a href =  "{{ url_for('stock', symbol = stock[3]) }}"> {{ stock[0] }} </a></td>
         <td> {{ stock[1] }} </td>
-        {% if "-" in stock[2] %}
-          <td style="color:red;"> {{ stock[2] }}% </td>
+        <td> {{ stock[2] }} </td>
+        <td> {{ stock[3] }} </td>
+        <td> {{ stock[4] }} </td>
+        <td> {{ stock[5] }} </td>
+        {% if "-" in stock[6] %}
+          <td style="color:red;"> {{ stock[6] }}% </td>
         {% else: %}
-          <td style="color:green;"> {{ stock[2] }}% </td>
+          <td style="color:green;"> {{ stock[6] }}% </td>
         {% endif %}
-        <td><a href =  "{{ url_for('trade', symbol = stock[3]) }}"> Trade </a></td>
+        <td><a href =  "{{ url_for('trade', symbol = stock[7]) }}"> Trade </a></td>
       </tr>
       {% endfor %}
   </table>

@@ -242,8 +242,12 @@ def user():
             stock_price = stock_history[-1][1]
 
             # Calculate Actual ROI (Return On Investment) For Each Stock
+            total_investment = format(Portfolio[i].total_purchase_price, '.2f')
+            total_worth = format(Portfolio[i].amount * stock_price, '.2f')
+            total_profit = format((Portfolio[i].amount * stock_price) - Portfolio[i].total_purchase_price, '.2f')
             ROI = format((((Portfolio[i].amount * stock_price) - Portfolio[i].total_purchase_price)/Portfolio[i].total_purchase_price) * 100, '.2f')
-            stock_info.append(ROI)
+            stock_info.extend([format(stock_price, '.2f'), total_investment, total_worth, total_profit, ROI])
+
             stock_info.append(stock.symbol)
             stocks.append(stock_info)
             portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
