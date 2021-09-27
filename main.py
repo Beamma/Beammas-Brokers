@@ -246,8 +246,8 @@ def user():
             stock_info.append(ROI)
             stock_info.append(stock.symbol)
             stocks.append(stock_info)
-        portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
-        portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
+            portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
+            portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
         net_profit = portfolio_value - portfolio_purchase_price
         total_ROI = 100 * net_profit / portfolio_purchase_price
 
