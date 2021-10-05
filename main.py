@@ -22,7 +22,7 @@ import models
 def home():
     if session.get('login', None) == None:
         session['login'] = 0
-    return render_template("home.html")
+    return render_template("home.html", status = session.get('login', None))
 
 
 @app.route('/stock', methods=['GET', 'POST'])
@@ -165,13 +165,15 @@ def login():
         email = request.form.get("email")
         user = models.User.query.filter_by(email=email).first()
         if user is None:
-            return redirect(url_for('login', status = session.get('login', None)))
+            error_status = "No User With That Email Was Found."
+            return render_template('login.html', status = session.get('login', None), error_status = error_status)
         if check_password_hash(user.password, request.form.get("password")) is True:
             session['login'] = user.id
             return redirect(url_for('home', status = session.get('login', None)))
         else:
             session['login'] = 0
-            return redirect(url_for('login', status = session.get('login', None)))
+            error_status = "Wrong Password"
+            return render_template('login.html', status = session.get('login', None), error_status = error_status)
     else:
         return render_template("login.html", status = session.get('login', None))
 
@@ -190,10 +192,9 @@ def register():
         email = request.form.get("email")
         user = models.User.query.all()
         for user in user:
-            print(email, user.email)
             if email == user.email:
-                print("Match")
-                return redirect(url_for('register', status = session.get('login', None)))
+                error_status = "An account with this email already exists."
+                return render_template ('register.html', status = session.get('login', None), error_status=error_status)
 
 
         user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, ird='0', address='0', bank='0', card='0', balance='0')
