@@ -107,7 +107,6 @@ def trade(symbol):
                         existing_stock.total_purchase_price = new_total_purchase_price
                         db.session.merge(existing_stock)
                     else:
-                        print("none")
                         portfolio = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), total_purchase_price=purchase_price)
                         db.session.add(portfolio)
 
@@ -117,8 +116,8 @@ def trade(symbol):
                     db.session.merge(user_info)
                     db.session.commit()
                 else:
-                    print("Failed")
-
+                    error_status = "Sorry You Dont Currently Have Enough Balance To Afford This Purchase."
+                    return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
 
             if request.form.get("trade") == "sell":
                 print("sell")
@@ -147,7 +146,8 @@ def trade(symbol):
 
                     db.session.commit()
                 else:
-                    print("No")
+                    error_status = "You Do Not Own That Many Stock."
+                    return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
             return redirect(request.url)
 
         return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
