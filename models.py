@@ -6,10 +6,6 @@ class User(db.Model):
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
     password = db.Column(db.String(), nullable=False)
-    ird = db.Column(db.Integer, nullable=False)
-    address = db.Column(db.String(), nullable=False)
-    bank = db.Column(db.Integer, nullable=False, default=0)
-    card = db.Column(db.Integer, nullable=False, default=0)
     balance = db.Column(db.Integer, nullable=False, default=1000)
 
     stocks = db.relationship('Trade_Info', back_populates='user')
