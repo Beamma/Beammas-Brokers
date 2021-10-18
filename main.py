@@ -22,7 +22,8 @@ import models
 def home():
     if session.get('login', None) == None:
         session['login'] = 0
-    return render_template("home.html", status = session.get('login', None))
+        session['admin'] = 0
+    return render_template("home.html", status = session.get('login', None), admin = session.get('admin'))
 
 
 @app.route('/stock', methods=['GET', 'POST'])
@@ -30,10 +31,10 @@ def all_stock():
     if session.get('login', None) == None:
         session['login'] = 0
     if session.get('login', None) == 0:
-        return redirect(url_for('login', status = session.get('login', None)))
+        return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
 
     stock_info = models.Stock.query.all()
-    return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info)
+    return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'))
 
 
 
@@ -43,7 +44,7 @@ def all_stock():
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
     if session.get('login', None) == 0:
-        return redirect(url_for('login', status = session.get('login', None)))
+        return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
     if request.method == "POST":
         periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
         period = request.form.get("period")
@@ -61,7 +62,7 @@ def stock(symbol):
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
-    return render_template('stock.html', status = session.get('login', None), stock = stock_history, stock_info = stock_info, period = period)
+    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period)
 
 
 
@@ -69,7 +70,7 @@ def stock(symbol):
 @app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
 def trade(symbol):
     if session.get('login', None) == 0:
-        return redirect(url_for('login', status = session.get('login', None)))
+        return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
     else:
         user_info = models.User.query.filter_by(id=session.get('login', None)).first()
         user_balance = user_info.balance
@@ -117,7 +118,7 @@ def trade(symbol):
                     db.session.commit()
                 else:
                     error_status = "Failed. You Currently Cannot Afford"
-                    return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
 
             if request.form.get("trade") == "sell":
                 print("sell")
@@ -147,40 +148,43 @@ def trade(symbol):
                     db.session.commit()
                 else:
                     error_status = "Failed. You Do Not Own Enough Stock."
-                    return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
+        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
 
 
 
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    return render_template('admin.html')
-
+    if session.get('admin') == 1:
+        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'))
+    else:
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if session.get('login', None) != 0:
-        return redirect(url_for('home', status = session.get('login', None)))
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
     if request.method == "POST":
 
         email = request.form.get("email")
         user = models.User.query.filter_by(email=email).first()
         if user is None:
             error_status = "No User With That Email Was Found."
-            return render_template('login.html', status = session.get('login', None), error_status = error_status)
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
         if check_password_hash(user.password, request.form.get("password")) is True:
             session['login'] = user.id
-            return redirect(url_for('home', status = session.get('login', None)))
+            session['admin'] = user.admin
+            return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
         else:
             session['login'] = 0
             error_status = "Wrong Password"
-            return render_template('login.html', status = session.get('login', None), error_status = error_status)
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
     else:
-        return render_template("login.html", status = session.get('login', None))
+        return render_template("login.html", status = session.get('login', None), admin = session.get('admin'))
 
 
 
@@ -190,7 +194,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if session.get('login', None) != 0:
-        return redirect(url_for('home', status = session.get('login', None)))
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
     if request.method == "POST":
 
         # Retreive User And Password, Hash Password
@@ -199,7 +203,7 @@ def register():
         for user in user:
             if email == user.email:
                 error_status = "An account with this email already exists."
-                return render_template ('register.html', status = session.get('login', None), error_status=error_status)
+                return render_template ('register.html', status = session.get('login', None), admin = session.get('admin'), error_status=error_status)
 
 
         user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, ird='0', address='0', bank='0', card='0', balance='0')
@@ -208,9 +212,9 @@ def register():
 
         user = models.User.query.filter_by(email=email).first()
         session['login'] = user.id
-        return redirect(url_for('home', status = session.get('login', None)))
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
     else:
-        return render_template("register.html", status = session.get('login', None))
+        return render_template("register.html", status = session.get('login', None), admin = session.get('admin'))
 
 
 
@@ -221,9 +225,9 @@ def register():
 def user():
     if request.method == "POST":
         session['login'] = 0
-        return redirect(url_for('home', status = session.get('login', None)))
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
     if session.get('login', None) == 0:
-        return redirect(url_for('login', status = session.get('login', None)))
+        return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
     else:
         User = models.User.query.filter_by(id=session.get('login', None)).first()
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
@@ -263,7 +267,7 @@ def user():
 
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
 
-        return render_template('user.html', status = session.get('login', None), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
+        return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
 
 
