@@ -23,18 +23,19 @@
     //
     //   chart.draw(data, options);
     // }
-    google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(drawBasic);
 
 function drawBasic() {
 
       var data = new google.visualization.DataTable();
-      data.addColumn('date', 'X');
+      data.addColumn('string', 'X');
       data.addColumn('number', 'Stock Price');
 
       data.addRows([
         {% for data in stock %}
-          [new Date({{ data[0].year }}, {{ data[0].month }}, {{ data[0].day }}, {{ data[0].hour }}, {{ data[0].minutes }}), {{ data[1] }}],
+          // [new Date({{ data[0].year }}, {{ data[0].month }}, {{ data[0].day }}, {{ data[0].hour }}, {{ data[0].minutes }}), {{ data[1] }}],
+          ['{{ data[0].strftime('%d-%m-%Y') }}', {{ data[1] }}],
         {% endfor %}
       ]);
 
@@ -44,7 +45,10 @@ function drawBasic() {
         },
         vAxis: {
           title: 'Popularity'
-        }
+        },
+
+        colors: ['#f33ff9']
+
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
