@@ -7,6 +7,7 @@ class User(db.Model):
     email = db.Column(db.String(), nullable=False)
     password = db.Column(db.String(), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=1000)
+    admin = db.Column(db.Boolean, nullable=False, default=0)
 
     stocks = db.relationship('Trade_Info', back_populates='user')
     # stocks_sell = db.relationship('Sold_Stock', back_populates='user')

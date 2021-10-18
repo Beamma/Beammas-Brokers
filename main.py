@@ -155,6 +155,11 @@ def trade(symbol):
 
 
 
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    return render_template('admin.html')
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

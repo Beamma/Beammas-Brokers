@@ -23,6 +23,35 @@
 
       chart.draw(data, options);
     }
+//     google.charts.load('current', {packages: ['corechart', 'line']});
+// google.charts.setOnLoadCallback(drawBasic);
+//
+// function drawBasic() {
+//
+//       var data = new google.visualization.DataTable();
+//       data.addColumn('number', 'X');
+//       data.addColumn('number', 'Stock Price');
+//
+//       data.addRows([
+//         // {% for data in stock %}
+//         //   [{{ data[0] }}, {{ data[1] }}],
+//         // {% endfor %}
+//         ['us', 143.27999877929688]
+//       ]);
+//
+//       var options = {
+//         hAxis: {
+//           title: 'Time'
+//         },
+//         vAxis: {
+//           title: 'Popularity'
+//         }
+//       };
+//
+//       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+//
+//       chart.draw(data, options);
+//     }
   </script>
 <body>
   <div id="curve_chart" style="width: 900px; height: 500px"></div>
