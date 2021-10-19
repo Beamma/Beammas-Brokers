@@ -201,6 +201,22 @@ def update():
     update = session.get('update')
     if session.get('admin') == 1 and update != None:
         stock = models.Stock.query.filter_by(symbol=update).first()
+        if request.method == "POST":
+            if not request.files.get('file', None):
+                pass
+            else:
+                img_file = request.files["logo"]
+                img_file.save(os.path.join("static/", img_file.filename))
+                stock.logo = img_file.filename
+
+            stock.name = request.form.get("name")
+            stock.description = request.form.get("description")
+            stock.symbol = request.form.get("ticker")
+            stock.type = request.form.get("type")
+            stock.market = request.form.get("market")
+            stock.category = request.form.get("category")
+            db.session.merge(stock)
+            db.session.commit()
         return render_template('update.html', status = session.get('login', None), admin = session.get('admin'), stock=stock)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
