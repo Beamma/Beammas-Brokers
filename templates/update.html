@@ -1,4 +1,21 @@
 {% extends 'layout.html' %}
 {% block content %}
-  Update
+  <div class = "update_wrapper">
+    <div class = "name">
+      <input type="string" name="name" value="{{ stock.name }}"></input>
+    </div>
+    <div class="ticker">
+      <input type="string" name="ticker" value="{{ stock.symbol }}"></input>
+    </div>
+    <div class="logo">
+      <input type="file" name="logo" placeholder="Stock Logo"></input> <img src = "static/{{ stock.logo }}" alt = "img" >
+    </div>
+    <div class="description">
+      <textarea name="description" rows="8" cols="80">{{ stock.description }}</textarea>
+    </div>
+    <input type="string" name="type" value="{{ stock.type }}"></input>
+    <input type="string" name="market" value="{{ stock.market }}"></input>
+    <input type="string" name="category" value="{{ stock.category }}"></input>
+    <input type="submit"></input>
+  </div>
 {% endblock %}

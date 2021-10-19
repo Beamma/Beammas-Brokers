@@ -25,6 +25,7 @@ def home():
     if session.get('login', None) == None:
         session['login'] = 0
         session['admin'] = 0
+        session['update'] = None
     return render_template("home.html", status = session.get('login', None), admin = session.get('admin'))
 
 
@@ -165,6 +166,7 @@ def trade(symbol):
 def admin():
     submitted = False
     if session.get('admin') == 1:
+        update_status = ""
         if request.method == "POST":
             radio = request.form.get("create_delete")
             if radio == "create":
@@ -182,8 +184,13 @@ def admin():
                 db.session.commit()
             if radio == "update":
                 update = request.form.get("update")
-                return redirect(url_for("update"))
-        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted)
+                session['update'] = update
+                stock = models.Stock.query.filter_by(symbol=update).first()
+                if stock != None:
+                    return redirect(url_for("update"))
+                else:
+                    update_status = "Failed Stock Doesnt Exist"
+        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted, update_status=update_status)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
@@ -191,8 +198,10 @@ def admin():
 
 @app.route('/admin/update', methods=['GET', 'POST'])
 def update():
-    if session.get('admin') == 1:
-        return render_template('update.html', status = session.get('login', None), admin = session.get('admin'))
+    update = session.get('update')
+    if session.get('admin') == 1 and update != None:
+        stock = models.Stock.query.filter_by(symbol=update).first()
+        return render_template('update.html', status = session.get('login', None), admin = session.get('admin'), stock=stock)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
