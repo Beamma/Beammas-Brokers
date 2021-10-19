@@ -166,13 +166,22 @@ def admin():
     submitted = False
     if session.get('admin') == 1:
         if request.method == "POST":
-            img_file = request.files["logo"]
-            img_file.save(os.path.join("static/", img_file.filename))
-            img_location =img_file.filename
-            stock = models.Stock(name=request.form.get("name"), logo=img_location, description=request.form.get("description"), symbol=request.form.get("ticker"), type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
-            db.session.add(stock)
-            db.session.commit()
-            submitted = True
+            radio = request.form.get("create_delete")
+            if radio == "create":
+                img_file = request.files["logo"]
+                img_file.save(os.path.join("static/", img_file.filename))
+                img_location =img_file.filename
+                stock = models.Stock(name=request.form.get("name"), logo=img_location, description=request.form.get("description"), symbol=request.form.get("ticker"), type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
+                db.session.add(stock)
+                db.session.commit()
+                submitted = True
+            if radio == "delete":
+                delete_stock = request.form.get("delete")
+                print(delete_stock)
+                delete = models.Stock.query.filter_by(symbol=delete_stock).first()
+                print(delete)
+                db.session.delete(db.session.merge(delete))
+                db.session.commit()
         return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
