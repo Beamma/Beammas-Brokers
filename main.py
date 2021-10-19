@@ -177,9 +177,7 @@ def admin():
                 submitted = True
             if radio == "delete":
                 delete_stock = request.form.get("delete")
-                print(delete_stock)
                 delete = models.Stock.query.filter_by(symbol=delete_stock).first()
-                print(delete)
                 db.session.delete(db.session.merge(delete))
                 db.session.commit()
         return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted)
