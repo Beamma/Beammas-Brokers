@@ -86,7 +86,10 @@ def trade(symbol):
         stock_price = stock_history[-1][1]
 
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
-        stocks_owned = portfolio.amount
+        if portfolio is None:
+            stocks_owned = 0
+        else:
+            stocks_owned = portfolio.amount
 
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).order_by(models.Trade_Info.id.desc()).all()
         # print(recent_purchases.order_by(recent_purchases.id.desc()))
@@ -206,7 +209,7 @@ def register():
                 return render_template ('register.html', status = session.get('login', None), admin = session.get('admin'), error_status=error_status)
 
 
-        user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, ird='0', address='0', bank='0', card='0', balance='0')
+        user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, admin=0, balance='1000')
         db.session.add(user)
         db.session.commit()
 
