@@ -123,14 +123,21 @@ tr:nth-child(even) {
 }
 
 .create_delete_radio, .create{
-  width: 50%;
+  width: 33.3%;
+  margin: 0px;
+  height: 100%;
+  float: left;
+}
+
+.create_delete_radio, .update{
+  width: 33.3%;
   margin: 0px;
   height: 100%;
   float: left;
 }
 
 .create_delete_radio, .delete{
-  width: 50%;
+  width: 33.3%;
   margin: 0px;
   height: 100%;
   float: right;
@@ -142,25 +149,31 @@ tr:nth-child(even) {
 }
 
 .create_stock {
-  width: 40%;
+  width: 28.8%;
   height: 50vh;
-  margin: 0px;
   float: left;
   text-align: center;
-  padding: 1%;
   margin: 2%;
   margin-top: 0px;
-  border: 3px solid #f33ff9;
+  border: 4px solid #f33ff9;
 }
 
 .delete_stock {
-  width: 40%;
+  width: 28.8%;
   height: 50vh;
-  margin: 0px;
   float: right;
   text-align: center;
-  padding: 1%;
   margin: 2%;
   margin-top: 0px;
-  border: 3px solid #f33ff9;
+  border: 4px solid #f33ff9;
+}
+
+.update_stock {
+  width: 28.8%;
+  height: 50vh;
+  float: left;
+  text-align: center;
+  margin: 2%;
+  margin-top: 0px;
+  border: 4px solid #f33ff9;
 }
