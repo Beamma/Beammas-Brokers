@@ -3,10 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import insert
 from config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import http.client
 import json
 import yfinance as yf
 import datetime
+import os
 
 
 app = Flask(__name__)
@@ -161,8 +163,17 @@ def trade(symbol):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    submitted = False
     if session.get('admin') == 1:
-        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'))
+        if request.method == "POST":
+            img_file = request.files["logo"]
+            img_file.save(os.path.join("static/", img_file.filename))
+            img_location =img_file.filename
+            stock = models.Stock(name=request.form.get("name"), logo=img_location, description=request.form.get("description"), symbol=request.form.get("ticker"), type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
+            db.session.add(stock)
+            db.session.commit()
+            submitted = True
+        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 

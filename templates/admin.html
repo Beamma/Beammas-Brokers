@@ -1,4 +1,24 @@
 {% extends 'layout.html' %}
 {% block content %}
-  Admin
+<div class="wrapper">
+  <div class="create_stock">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="string" name="name" placeholder="Stock Name"></input>
+      <input type="file" name="logo" placeholder="Stock Logo"></input>
+      <input type="text" name="description" placeholder="Stock Description"></input>
+      <input type="string" name="ticker" placeholder="Stock Ticker"></input>
+      <input type="string" name="type" placeholder="Stock Type"></input>
+      <input type="string" name="market" placeholder="Stock Market"></input>
+      <input type="string" name="category" placeholder="Stock Category"></input>
+      <input type="submit"></input>
+    </form>
+    {% if submitted == True: %}
+      Completed
+    {% endif %}
+  </div>
+  <div class="delete_stock">
+  </div>
+  <div class="update_stock">
+  </div>
+</div>
 {% endblock %}
