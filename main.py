@@ -22,7 +22,7 @@ import models
 
 @app.route('/')
 def home():
-    if session.get('login', None) == None:
+    if session.get('login', None) == None: # If first time on site, set neccesary sessions
         session['login'] = 0
         session['admin'] = 0
         session['update'] = None
@@ -31,8 +31,8 @@ def home():
 
 @app.route('/stock', methods=['GET', 'POST'])
 def all_stock():
-    if session.get('login', None) == None:
-        session['login'] = 0
+
+    # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
 
@@ -46,25 +46,33 @@ def all_stock():
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
+
+    # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
+
     if request.method == "POST":
+        # Select interval for API/Graph based off the period selected
         periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
         period = request.form.get("period")
         interval = periods[period]
+
     else:
+        # Default Values
         period = '7d'
         interval = '30m'
+
+    # Get stock price history
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
-    print(symbol)
-    ticker = yf.Ticker(symbol)
-    print(ticker)
     history = ticker.history(period=period, interval=interval)
     stock_history = []
+
+    # Add date and price in feasable format for grah
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
+
     return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period)
 
 
@@ -72,14 +80,18 @@ def stock(symbol):
 
 @app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
 def trade(symbol):
+
+    # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
+
     else:
+        # Get essential info
         user_info = models.User.query.filter_by(id=session.get('login', None)).first()
         user_balance = user_info.balance
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
 
-        # Get Latest Price (Imporvement Needed)
+        # Get Latest Price
         ticker = yf.Ticker(symbol)
         history = ticker.history(period="1h", interval="1h")
         stock_history = []
@@ -88,24 +100,32 @@ def trade(symbol):
             stock_history.append(date_price)
         stock_price = stock_history[-1][1]
 
+        # Get portfolio of user
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
+
+        # check if user owns any stock if not set to 0
         if portfolio is None:
             stocks_owned = 0
         else:
             stocks_owned = portfolio.amount
 
+        # Get Stock Reciepts
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).order_by(models.Trade_Info.id.desc()).all()
-        # print(recent_purchases.order_by(recent_purchases.id.desc()))
 
         if request.method == "POST":
             stock = models.Stock.query.filter_by(symbol=symbol).all()
+
+            # Buy
             if request.form.get("trade") == "buy":
+
+                # Check to make sure user has enough money to buy
                 if user_balance >= int(request.form.get("amount")) * int(stock_price):
                     trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Buy")
 
                     db.session.add(trade)
                     existing_stock = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
                     purchase_price = int(request.form.get("amount")) * stock_price
+
                     # Update Portfolio DB Amount If Required
                     if existing_stock:
                         new_amount = int(existing_stock.amount) + int(request.form.get("amount"))
@@ -113,6 +133,7 @@ def trade(symbol):
                         existing_stock.amount = new_amount
                         existing_stock.total_purchase_price = new_total_purchase_price
                         db.session.merge(existing_stock)
+
                     else:
                         portfolio = models.Portfolio(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), total_purchase_price=purchase_price)
                         db.session.add(portfolio)
@@ -122,15 +143,18 @@ def trade(symbol):
                     user_info.balance = user_balance
                     db.session.merge(user_info)
                     db.session.commit()
+
                 else:
-                    error_status = "Failed. You Currently Cannot Afford"
+                    error_status = "Failed. You Currently Cannot Afford" # set error status
                     return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
 
+            # Sell
             if request.form.get("trade") == "sell":
-                print("sell")
+                # Get amount of stock user want to sell, and amount of stock user has
                 amount = int(request.form.get("amount"))
                 portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
-                print(portfolio)
+
+                # If stock amount selling is = to owned, delete completely
                 if portfolio.amount == amount:
                     print("Sell All")
                     db.session.delete(db.session.merge(portfolio))
@@ -141,6 +165,8 @@ def trade(symbol):
                     db.session.add(trade)
 
                     db.session.commit()
+
+                # If stock amount owned is greater than selling, update leaving remaining stock in users portfolio
                 if portfolio.amount >  amount:
                     portfolio.amount = int(portfolio.amount) - int(amount)
                     portfolio.total_purchase_price = portfolio.total_purchase_price - (int(amount) * int(stock_price))
@@ -152,6 +178,8 @@ def trade(symbol):
                     db.session.add(trade)
 
                     db.session.commit()
+
+                # Otherwise dont allow any sell and send error message
                 else:
                     error_status = "Failed. You Do Not Own Enough Stock."
                     return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
@@ -164,12 +192,21 @@ def trade(symbol):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    submitted = False
-    if session.get('admin') == 1:
-        update_status = ""
+
+    # check if suer is admin if not redirect to home
+    if session.get('admin') != 1:
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+
+    else:
+        update_status = "" # Set update status to false (no error status)
+        submitted = False # Set submitted status to false (no error status)
+
         if request.method == "POST":
+
+            # Check Radio Selection, From then run neccesary updates/ deletes
             radio = request.form.get("create_delete")
             if radio == "create":
+                # Create
                 img_file = request.files["logo"]
                 img_file.save(os.path.join("static/", img_file.filename))
                 img_location =img_file.filename
@@ -178,30 +215,37 @@ def admin():
                 db.session.commit()
                 submitted = True
             if radio == "delete":
+                # Delete
                 delete_stock = request.form.get("delete")
                 delete = models.Stock.query.filter_by(symbol=delete_stock).first()
                 db.session.delete(db.session.merge(delete))
                 db.session.commit()
             if radio == "update":
+                # Update
                 update = request.form.get("update")
                 session['update'] = update
+                # Check to make sure stock selected is real, if is redirect for url
                 stock = models.Stock.query.filter_by(symbol=update).first()
                 if stock != None:
                     return redirect(url_for("update"))
                 else:
-                    update_status = "Failed Stock Doesnt Exist"
+                    update_status = "Failed Stock Doesnt Exist" # pass error status
         return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted, update_status=update_status)
-    else:
-        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
 
 
 @app.route('/admin/update', methods=['GET', 'POST'])
 def update():
-    update = session.get('update')
+    update = session.get('update') # call stock to update
+
+    # check to make sure user is admin and has submitted a stock to update
     if session.get('admin') == 1 and update != None:
         stock = models.Stock.query.filter_by(symbol=update).first()
         if request.method == "POST":
+
+            # Update fields
+
+            # Check if new img been uploaded if so, update if not pass
             if not request.files.get('file', None):
                 pass
             else:
@@ -217,6 +261,8 @@ def update():
             stock.category = request.form.get("category")
             db.session.merge(stock)
             db.session.commit()
+
+
         return render_template('update.html', status = session.get('login', None), admin = session.get('admin'), stock=stock)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
@@ -225,20 +271,28 @@ def update():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+    # Make sure user isnt already logged in
     if session.get('login', None) != 0:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
-    if request.method == "POST":
 
+    if request.method == "POST":
+        # Get email and make sure an account already exists for said email
         email = request.form.get("email")
         user = models.User.query.filter_by(email=email).first()
         if user is None:
             error_status = "No User With That Email Was Found."
             return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
+
+        # Check if users password is correct
         if check_password_hash(user.password, request.form.get("password")) is True:
+            # Set users session, (making them logged in)
             session['login'] = user.id
             session['admin'] = user.admin
             return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+
         else:
+            # Otherwise makesure the user is set as logged out
             session['login'] = 0
             error_status = "Wrong Password"
             return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
@@ -264,11 +318,12 @@ def register():
                 error_status = "An account with this email already exists."
                 return render_template ('register.html', status = session.get('login', None), admin = session.get('admin'), error_status=error_status)
 
-
+        # Add user to data base
         user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, admin=0, balance='1000')
         db.session.add(user)
         db.session.commit()
 
+        # Log user in using id
         user = models.User.query.filter_by(email=email).first()
         session['login'] = user.id
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
@@ -282,14 +337,22 @@ def register():
 
 @app.route('/user', methods=['GET', 'POST'])
 def user():
+
+    # Log user out
     if request.method == "POST":
         session['login'] = 0
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+
+    # Check if user is logged in
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
+
     else:
+        # Get user info and there portfolio
         User = models.User.query.filter_by(id=session.get('login', None)).first()
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
+
+        # Calculate portfolio value and purchase price
         stocks = []
         portfolio_value = 0
         portfolio_purchase_price = 0
@@ -297,9 +360,6 @@ def user():
             stock_info = []
             stock_info.append(Portfolio[i].stock.name)
             stock_info.append(Portfolio[i].amount)
-
-            # Calculate Percentage Increase
-
             # Get Current Stock Price
             stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
             ticker = yf.Ticker(stock.symbol)
@@ -321,9 +381,12 @@ def user():
             stocks.append(stock_info)
             portfolio_purchase_price = portfolio_purchase_price + Portfolio[i].total_purchase_price
             portfolio_value = portfolio_value + (Portfolio[i].amount * stock_price)
+
+        # Calculate Total ROI and net profit
         net_profit = portfolio_value - portfolio_purchase_price
         total_ROI = 100 * net_profit / portfolio_purchase_price
 
+        # Display User reciepts
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
 
         return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
