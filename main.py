@@ -180,9 +180,22 @@ def admin():
                 delete = models.Stock.query.filter_by(symbol=delete_stock).first()
                 db.session.delete(db.session.merge(delete))
                 db.session.commit()
+            if radio == "update":
+                update = request.form.get("update")
+                return redirect(url_for("update"))
         return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted)
     else:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+
+
+
+@app.route('/admin/update', methods=['GET', 'POST'])
+def update():
+    if session.get('admin') == 1:
+        return render_template('update.html', status = session.get('login', None), admin = session.get('admin'))
+    else:
+        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
