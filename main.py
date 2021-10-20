@@ -46,7 +46,7 @@ def all_stock():
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 def stock(symbol):
-
+    maximum = 0
     # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
@@ -68,13 +68,15 @@ def stock(symbol):
     ticker = yf.Ticker(symbol)
     history = ticker.history(period=period, interval=interval)
     stock_history = []
+    maximum = max(history['High'])
+    print("Max; ", maximum)
 
     # Add date and price in feasable format for grah
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
 
-    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period)
+    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, max=maximum)
 
 
 

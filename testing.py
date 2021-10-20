@@ -6,8 +6,11 @@ msft = yf.Ticker("MSFT")
 # print(msft.info)
 
 # get historical market data
-history = msft.history(period="1y")
-print(history)
+history = msft.history(period="7d")
+# print(history)
+
+print(max(history['High']))
+
 # stock_history = []
 # for index in history.index:
 #     date_price = [index, history.loc[index]['Close']]
