@@ -65,6 +65,7 @@ def stock(symbol):
     # Get stock price history
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
+    ticker = yf.Ticker(symbol)
     history = ticker.history(period=period, interval=interval)
     stock_history = []
 
