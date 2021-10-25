@@ -1,97 +1,106 @@
 {% extends 'layout.html' %}
 {% block content %}
-<script>
-  function showReciepts() {
-    var x = document.getElementById("reciepts");
-    if (x.style.display === "block") {
-      x.style.display = "none";
-    } else {
-      x.style.display = "block";
+<div class="trade_wrapper">
+  <script>
+    function showReciepts() {
+      var x = document.getElementById("reciepts");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+    }
   }
-}
-</script>
+  </script>
+  <div class="info">
+    <b>Stock Price: </b> {{ stock_price }}
+    <b>Stocks Owned: </b> {{ stocks_owned }}
+    <b>User Balance: </b> {{ user_balance }}
+  </div>
+  <div class="transaction">
+    <form method="POST">
+      <select name="trade" id="trade" required>
+        <option value="buy">Buy</option>
+        <option value="sell">Sell</option>
+      </select>
+      <input type="number"  name="amount" id="user_input" placeholder="Number Of Shares"></input>
 
-  Stock Price: <b> {{ stock_price }} </b>
-  Stocks Owned: <b> {{ stocks_owned }} </b>
-  User Balance: <b> {{ user_balance }} </b>
-  <form method="POST">
-    <select name="trade" id="trade" required>
-      <option value="buy">Buy</option>
-      <option value="sell">Sell</option>
-    </select>
-    <input type="number"  name="amount" id="user_input" required>Number Of Shares</input>
-    <!-- Trigger/Open The Modal -->
-    <button type="button" id="myBtn" >Submit</button>
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <!-- Display data -->
-        <p>Are you sure you want to <b><span id='display'></span></b>: <span id='trade_display'></span> {{ stock_info.name }} Stock</p>
-        <p>Stock Trade Price: <b>{{ stock_price }}</b></p>
-        <p>Total Trade Value: <b><span id='total_cost'></b></p>
-        <!-- <p>Total Trade Value: {{ stock_price }}</p> -->
-        <input type="submit"></input>
+      <!-- Trigger/Open The Modal -->
+      <button type="button" id="myBtn" >Submit</button>
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <!-- Display data -->
+          <p>Are you sure you want to <b><span id='display'></span></b>: <span id='trade_display'></span> {{ stock_info.name }} Stock</p>
+          <p>Stock Trade Price: <b>{{ stock_price }}</b></p>
+          <p>Total Trade Value: <b><span id='total_cost'></b></p>
+          <!-- <p>Total Trade Value: {{ stock_price }}</p> -->
+          <input type="submit"></input>
+        </div>
+
       </div>
-
+      </form>
     </div>
-    </form>
-    {{ error_status }}
-  <script language="JavaScript">
+    <div class="error">
+      {{ error_status }}
+    </div>
+    <script language="JavaScript">
 
-      // Get the modal
-      var modal = document.getElementById("myModal");
+        // Get the modal
+        var modal = document.getElementById("myModal");
 
-      // Get the button that opens the modal
-      var btn = document.getElementById("myBtn");
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
 
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
 
-      // When the user clicks the button, open the modal
-      btn.onclick = function() {
-        document.getElementById('display').innerHTML =
-                    document.getElementById("trade").value;
-        document.getElementById('trade_display').innerHTML =
-                    document.getElementById("user_input").value;
-        document.getElementById('total_cost').innerHTML =
-                    document.getElementById("user_input").value *{{ stock_price }};
-        modal.style.display = "block";
-      }
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+          document.getElementById('display').innerHTML =
+                      document.getElementById("trade").value;
+          document.getElementById('trade_display').innerHTML =
+                      document.getElementById("user_input").value;
+          document.getElementById('total_cost').innerHTML =
+                      document.getElementById("user_input").value *{{ stock_price }};
+          modal.style.display = "block";
+        }
 
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function() {
-        modal.style.display = "none";
-      }
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function(event) {
-        if (event.target == modal) {
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
           modal.style.display = "none";
         }
-      }
-    </script>
-  <button onclick="showReciepts()">Toggle Reciepts</button>
-  <div id="reciepts">
-    <table style="width:100%">
-      <tr>
-        <th>Pruchase Type</th>
-        <th>Stock Traded</th>
-        <th>Trade Price</th>
-        <th> Trade Price Total </th>
-        <th>Trade Date</th>
-      </tr>
-      {% for trades in recent_purchases %}
-      <tr>
-        <td>{{ trades.trade_type }} </td>
-        <td>{{ trades.amount }} </td>
-        <td>{{ trades.trade_price }} </td>
-        <td>{{ trades.trade_price * trades.amount }}
-        <td>{{ trades.trade_date }} </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
 
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
+    <div class="reciepts_button">
+      <button onclick="showReciepts()">Toggle Reciepts</button>
+    </div>
+    <div id="reciepts">
+      <table style="width:100%">
+        <tr>
+          <th>Pruchase Type</th>
+          <th>Stock Traded</th>
+          <th>Trade Price</th>
+          <th> Trade Price Total </th>
+          <th>Trade Date</th>
+        </tr>
+        {% for trades in recent_purchases %}
+        <tr>
+          <td>{{ trades.trade_type }} </td>
+          <td>{{ trades.amount }} </td>
+          <td>{{ trades.trade_price }} </td>
+          <td>{{ trades.trade_price * trades.amount }}
+          <td>{{ trades.trade_date }} </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+</div>
 {% endblock %}

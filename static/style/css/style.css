@@ -379,15 +379,51 @@ td, th {
   padding: 8px;
 }
 
-/* .portfolio{
+
+/* Trade Styling */
+.trade_wrapper{
+font-family: 'Oswald', sans-serif;
+}
+
+.trade_wrapper .info{
   width: 100%;
-  padding: 10%;
-} */
+  text-align: center;
+  color: var(--silver);
+  font-size: 40px;
+}
 
-/* tr:nth-child(even) {
-  background-color: #dddddd;
-} */
+.trade_wrapper .info b{
+  color: var(--gold);
+}
 
+.trade_wrapper .transaction{
+  width: 100%;
+  text-align: center;
+  color: var(--silver);
+  font-size: 40px;
+}
+
+.trade_wrapper select, input{
+  height: 30px;
+  width: 90px;
+  font-size: 20px;
+}
+
+.trade_wrapper .error{
+  width: 100%;
+  text-align: center;
+  height: 30px;
+  font-size: 20px;
+  font-family: font-family: 'Oswald', sans-serif;
+  color: red;
+  margin-top: 10px;
+}
+
+.trade_wrapper .reciepts_button{
+  width: 100%;
+  text-align: center;
+  color: var(--charcoal);
+}
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
