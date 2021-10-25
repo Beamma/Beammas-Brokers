@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_caching import Cache
 from sqlalchemy import insert
 from config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,11 +12,15 @@ import datetime
 import os
 
 
+cache = Cache()
+
 app = Flask(__name__)
 app.config.from_object(Config)  # applying all config to app
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
 db = SQLAlchemy(app)
+app.config['CACHE_TYPE'] = 'simple'
+cache.init_app(app)
 import models
 
 
@@ -45,6 +50,7 @@ def all_stock():
 
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
+@cache.cached(timeout=120)
 def stock(symbol):
     maximum = 0
     # Check If user is logged in, if not redirect for login
@@ -68,20 +74,29 @@ def stock(symbol):
     ticker = yf.Ticker(symbol)
     history = ticker.history(period=period, interval=interval)
     stock_history = []
-    maximum = max(history['High'])
-    print("Max; ", maximum)
 
-    # Add date and price in feasable format for grah
+    # Add date and price in feasable format for graph
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
 
-    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, max=maximum)
+    # Cacluclate info for given periods
+    ticker_info = ticker.info
+    maximum = format(max(history['High']), '.2f')
+    low = format(min(history['Low']), '.2f')
+    current = ticker_info['currentPrice']
+    price_change = format((stock_history[-1][1]-stock_history[0][1])/stock_history[0][1]*100, '.2f')
+    open = format(stock_history[0][1], '.2f')
+    market_cap = ticker_info['marketCap']
+    price_info = {'Max': maximum, 'Low': low, 'Current': current, 'Price_change': price_change, 'Open': open, 'Market_cap': market_cap}
+
+    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, price_info = price_info)
 
 
 
 
 @app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
+@cache.cached(timeout=120)
 def trade(symbol):
 
     # Check If user is logged in, if not redirect for login
@@ -96,12 +111,7 @@ def trade(symbol):
 
         # Get Latest Price
         ticker = yf.Ticker(symbol)
-        history = ticker.history(period="1h", interval="1h")
-        stock_history = []
-        for index in history.index:
-            date_price = [index, history.loc[index]['Close']]
-            stock_history.append(date_price)
-        stock_price = stock_history[-1][1]
+        stock_price = float(ticker.info['currentPrice'])
 
         # Get portfolio of user
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
@@ -339,6 +349,7 @@ def register():
 
 
 @app.route('/user', methods=['GET', 'POST'])
+@cache.cached(timeout=60)
 def user():
 
     # Log user out
@@ -366,12 +377,7 @@ def user():
             # Get Current Stock Price
             stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
             ticker = yf.Ticker(stock.symbol)
-            history = ticker.history(period="1h", interval="1h")
-            stock_history = []
-            for index in history.index:
-                date_price = [index, history.loc[index]['Close']]
-                stock_history.append(date_price)
-            stock_price = stock_history[-1][1]
+            stock_price = ticker.info['currentPrice']
 
             # Calculate Actual ROI (Return On Investment) For Each Stock
             total_investment = format(Portfolio[i].total_purchase_price, '.2f')
@@ -391,12 +397,13 @@ def user():
 
         # Display User reciepts
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
-        print(stocks)
         return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
 
 
-
+@app.route('/user/deposit', methods=['GET', 'POST'])
+def deposit():
+    return render_template('deposit.html')
 
 
 if __name__ == "__main__":

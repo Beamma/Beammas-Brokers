@@ -10,6 +10,7 @@ history = msft.history(period="7d")
 # print(history)
 
 print(max(history['High']))
+print(msft.info)
 
 # stock_history = []
 # for index in history.index:

@@ -59,7 +59,9 @@ function drawBasic() {
 <body>
   <div id="chart_div" style="width: 900px; height: 500px"></div>
   <div class="option">
-    {{ max }}
+    {% for info in price_info.items() %}
+        <b>{{ info[0] }}:</b> {{ info[1] }},
+    {% endfor %}
     <form method="POST">
       <select name="period" id="period">
         {% if period == "max": %}
