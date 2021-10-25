@@ -8,6 +8,7 @@
 body{
   background-color: white;
   margin: 0px;
+  height: 100%;
 }
 
 nav{
@@ -27,6 +28,10 @@ nav a{
 
 nav a:hover{
   color: var(--silver);
+}
+
+.wrapper {
+  min-height: 100vh;
 }
 
 .stock {
@@ -192,6 +197,7 @@ footer {
   color: var(--gold);
   text-align: center;
   margin: 0px;
+  position: absolute;
 }
 
 footer p {
