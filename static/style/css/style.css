@@ -210,12 +210,49 @@ nav a:hover{
   margin-left: 10%;
 }
 
-.stock_page .trade, select, input{
+.stock_page .trade select input{
   width: 100px;
   border-style: none;
   text-align: center;
   color: var(--gold);
   background-color: var(--silver;)
+}
+
+
+/* All Stock */
+
+.all_stock_wrapper{
+  background-color: white;
+  height: 100vh;
+}
+
+.stock_filter{
+  width: 14%;
+  float: left;
+  margin: 0px;
+  background: var(--charcoal);
+  height: 100vh;
+  padding-top: 2%;
+  padding-left: 1%;
+  color: var(--silver);
+}
+
+.stock_filter b{
+  color: var(--gold);
+}
+
+.all_stock_wrapper .stock_info{
+  width: 85%;
+  float: right;
+  margin: 0px;
+}
+
+.all_stock_wrapper .stock_info input{
+  width: 5px;
+}
+
+.all_stock_wrapper .search{
+  margin-bottom: 5px;
 }
 
 .stock {

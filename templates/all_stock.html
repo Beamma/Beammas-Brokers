@@ -1,55 +1,60 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <div class="all_stock_wrapper">
-      <div class="stock_filter">
-        <form method="POST">
-          <div class="search">
-            <input type="text" name="search" placeholder="Stock Ticker"></input>
-          </div>
-          <div class = "type">
-            <input type="radio" name="type" value="All" checked></input>
-            <label for="ALL">ALL</label>
-            <input type="radio" name="type" value="Company"></input>
-            <label for="Company">Company</label>
-            <input type="radio" name="type" value="ETF"></input>
-            <label for="ETF">ETF</label>
-            <input type="radio" name="type" value="Fund"></input>
-            <label for="Fund">Fund</label>
-          </div>
-          <div class = "category">
-            <input type="radio" name="category" value="All" checked></input>
-            <label for="ALL">ALL</label>
-            <input type="radio" name="category" value="Tech"></input>
-            <label for="Tech">Tech</label>
-            <input type="radio" name="category" value="Agriculture"></input>
-            <label for="Agriculture">Agriculture</label>
-            <input type="radio" name="category" value="Retail"></input>
-            <label for="Retail">Retail</label>
-            <input type="radio" name="category" value="Finance"></input>
-            <label for="Finance">Finance</label>
-            <input type="radio" name="category" value="Automotive"></input>
-            <label for="Automotive">Automotive</label>
-          </div>
-          <div class = "exchange">
-            <input type="radio" name="exchange" value="All" checked></input>
-            <label for="ALL">ALL</label>
-            <input type="radio" name="exchange" value="NASDAQ"></input>
-            <label for="NASDAQ">NASDAQ</label>
-            <input type="radio" name="exchange" value="NYSE"></input>
-            <label for="NYSE">NYSE</label>
-          </div>
-          <input type="submit"></input>
-        </form>
+<div class="all_stock_wrapper">
+  <div class="stock_filter">
+    <form method="POST">
+      <div class="search">
+        <input type="text" name="search" placeholder="Stock Ticker"></input>
       </div>
-      {% for stocks in stock_info %}
-        <div class="stock">
-          <div class="stock_image">
-            <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> <img src = "static/{{ stocks.logo }}" alt = "img" > </a>
-          </div>
-          <div class="stock_name">
-            <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> {{ stocks.name }} </a>
-          </div>
+      <div class = "type">
+        <b> Type </b>
+        <p><input type="radio" name="type" value="All" checked></input>
+        <label for="ALL">ALL</label></p>
+        <p><input type="radio" name="type" value="Company"></input>
+        <label for="Company">Company</label></p>
+        <p><input type="radio" name="type" value="ETF"></input>
+        <label for="ETF">ETF</label></p>
+        <p><input type="radio" name="type" value="Fund"></input>
+        <label for="Fund">Fund</label></p>
+      </div>
+      <div class = "category">
+        <b> Category </b>
+        <p><input type="radio" name="category" value="All" checked></input>
+        <label for="ALL">ALL</label></p>
+        <p><input type="radio" name="category" value="Tech"></input>
+        <label for="Tech">Tech</label></p>
+        <p><input type="radio" name="category" value="Agriculture"></input>
+        <label for="Agriculture">Agriculture</label></p>
+        <p><input type="radio" name="category" value="Retail"></input>
+        <label for="Retail">Retail</label></p>
+        <p><input type="radio" name="category" value="Finance"></input>
+        <label for="Finance">Finance</label></p>
+        <p><input type="radio" name="category" value="Automotive"></input>
+        <label for="Automotive">Automotive</label></p>
+      </div>
+      <div class = "exchange">
+        <b> Exchange </b>
+        <p><input type="radio" name="exchange" value="All" checked></input>
+        <label for="ALL">ALL</label></p>
+        <p><input type="radio" name="exchange" value="NASDAQ"></input>
+        <label for="NASDAQ">NASDAQ</label></p>
+        <p><input type="radio" name="exchange" value="NYSE"></input>
+        <label for="NYSE">NYSE</label></p>
+      </div>
+      <input type="submit"></input>
+    </form>
+  </div>
+  <div class="stock_info">
+    {% for stocks in stock_info %}
+      <div class="stock">
+        <div class="stock_image">
+          <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> <img src = "static/{{ stocks.logo }}" alt = "img" > </a>
         </div>
+        <div class="stock_name">
+          <a href = "{{ url_for('stock', symbol = stocks.symbol) }}"> {{ stocks.name }} </a>
+        </div>
+      </div>
     {% endfor %}
   </div>
+</div>
 {% endblock %}
