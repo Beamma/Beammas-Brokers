@@ -6,11 +6,11 @@
   Stocks Owned: <b> {{ stocks_owned }} </b>
   User Balance: <b> {{ user_balance }} </b>
   <form method="POST">
-    <select name="trade" id="trade">
+    <select name="trade" id="trade" required>
       <option value="buy">Buy</option>
       <option value="sell">Sell</option>
     </select>
-    <input type="number"  name="amount" id="user_input">Number Of Shares</input>
+    <input type="number"  name="amount" id="user_input" required>Number Of Shares</input>
     <!-- Trigger/Open The Modal -->
     <button type="button" id="myBtn" >Submit</button>
     <!-- The Modal -->

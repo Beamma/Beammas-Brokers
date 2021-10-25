@@ -377,7 +377,12 @@ def user():
             # Get Current Stock Price
             stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
             ticker = yf.Ticker(stock.symbol)
-            stock_price = ticker.info['currentPrice']
+            history = ticker.history(period="1h", interval="1h")
+            stock_history = []
+            for index in history.index:
+                date_price = [index, history.loc[index]['Close']]
+                stock_history.append(date_price)
+            stock_price = stock_history[-1][1]
 
             # Calculate Actual ROI (Return On Investment) For Each Stock
             total_investment = format(Portfolio[i].total_purchase_price, '.2f')
@@ -403,6 +408,16 @@ def user():
 
 @app.route('/user/deposit', methods=['GET', 'POST'])
 def deposit():
+    if session.get('login', None) == 0:
+        return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
+
+    else:
+        if request.method == "POST":
+            user = models.User.query.filter_by(id=session.get('login', None)).first()
+            user.balance = int(request.form.get('money')) + user.balance
+            db.session.merge(user)
+            db.session.commit()
+
     return render_template('deposit.html')
 
 
