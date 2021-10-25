@@ -1,43 +1,45 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class="wrapper">
-  <form method="POST" enctype="multipart/form-data">
-    <div class="create_delete_radio">
-      <div class="create">
-        <input type="radio" name="create_delete" value="create" checked></input>
-        <label for="create">Create</label>
+  <div class="admin">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="create_delete_radio">
+        <div class="create">
+          <b><input type="radio" name="create_delete" value="create" checked></input>
+          <label for="create">Create</label></b>
+        </div>
+        <div class="delete">
+          <b><input type="radio" name="create_delete" value="delete"></input>
+          <label for="delete">Delete</label></b>
+        </div>
+        <div class="update">
+          <b><input type="radio" name="create_delete" value="update"></input>
+          <label for="update">Update</label></b>
+        </div>
       </div>
-      <div class="delete">
-        <input type="radio" name="create_delete" value="delete"></input>
-        <label for="delete">Delete</label>
+      <div class="create_stock">
+        <p><input type="file" name="logo" placeholder="Stock Logo"></input></p>
+        <p><input type="string" name="ticker" placeholder="Stock Ticker"></input></p>
+        <p><input type="string" name="type" placeholder="Stock Type"></input></p>
+        <p><input type="string" name="market" placeholder="Stock Market"></input></p>
+        <p><input type="string" name="category" placeholder="Stock Category"></input></p>
+        <p><input type="submit"></input>
+        {% if submitted == True: %}
+          Completed
+        {% endif %}
       </div>
-      <div class="update">
-        <input type="radio" name="create_delete" value="update"></input>
-        <label for="update">Update</label>
+      <div class="delete_stock">
+        <p><input type="string" name="delete" placeholder="Stock To Delete"></input></p>
+        <p><input type="submit"></input></p>
       </div>
-    </div>
-    <div class="create_stock">
-      <b> Create Stock </b>
-      <input type="file" name="logo" placeholder="Stock Logo" required></input>
-      <input type="string" name="ticker" placeholder="Stock Ticker" required></input>
-      <input type="string" name="type" placeholder="Stock Type" required></input>
-      <input type="string" name="market" placeholder="Stock Market"required></input>
-      <input type="string" name="category" placeholder="Stock Category" required></input>
-      <input type="submit"></input>
-      {% if submitted == True: %}
-        Completed
-      {% endif %}
-    </div>
-    <div class="delete_stock">
-      <b> Delete Stock </b>
-      <input type="string" name="delete" placeholder="Stock To Delete"></input>
-      <input type="submit"></input>
-    </div>
-    <div class="update_stock">
-      <input type="string" name="update" placeholder="Stock To Update"></input>
-      <input type="submit"></input>
-      {{ update_status }}
-    </div>
-  </form>
+      <div class="update_stock">
+        <p><input type="string" name="update" placeholder="Stock To Update"></input></p>
+        <p><input type="submit"></input></p>
+        <div class="error">
+          {{ update_status }}
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
