@@ -266,7 +266,10 @@ def admin():
                 img_file = request.files["logo"]
                 img_file.save(os.path.join("static/", img_file.filename))
                 img_location =img_file.filename
-                stock = models.Stock(name=request.form.get("name"), logo=img_location, description=request.form.get("description"), symbol=request.form.get("ticker"), type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
+                symbol=request.form.get("ticker")
+                ticker = yf.Ticker(symbol)
+                ticker_info = ticker.info
+                stock = models.Stock(name=ticker_info['shortName'], logo=img_location, description=request.form.get("longBusinessSummary"), symbol=symbol, type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
                 db.session.add(stock)
                 db.session.commit()
                 submitted = True
@@ -392,7 +395,7 @@ def register():
 
 
 @app.route('/user', methods=['GET', 'POST'])
-@cache.cached(timeout=60)
+# @cache.cached(timeout=60)
 def user():
 
     # Log user out
@@ -464,7 +467,7 @@ def deposit():
             db.session.merge(user)
             db.session.commit()
 
-    return render_template('deposit.html')
+    return render_template('deposit.html', status = session.get('login', None), admin = session.get('admin'))
 
 
 if __name__ == "__main__":
