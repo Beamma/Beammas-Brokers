@@ -1,6 +1,15 @@
 {% extends 'layout.html' %}
 {% block content %}
-
+<script>
+  function showReciepts() {
+    var x = document.getElementById("reciepts");
+    if (x.style.display === "block") {
+      x.style.display = "none";
+    } else {
+      x.style.display = "block";
+  }
+}
+</script>
 
   Stock Price: <b> {{ stock_price }} </b>
   Stocks Owned: <b> {{ stocks_owned }} </b>
@@ -63,23 +72,26 @@
         }
       }
     </script>
-  <table style="width:100%">
-    <tr>
-      <th>Pruchase Type</th>
-      <th>Stock Traded</th>
-      <th>Trade Price</th>
-      <th> Trade Price Total </th>
-      <th>Trade Date</th>
-    </tr>
-    {% for trades in recent_purchases %}
-    <tr>
-      <td>{{ trades.trade_type }} </td>
-      <td>{{ trades.amount }} </td>
-      <td>{{ trades.trade_price }} </td>
-      <td>{{ trades.trade_price * trades.amount }}
-      <td>{{ trades.trade_date }} </td>
-    </tr>
-    {% endfor %}
-  </table>
+  <button onclick="showReciepts()">Toggle Reciepts</button>
+  <div id="reciepts">
+    <table style="width:100%">
+      <tr>
+        <th>Pruchase Type</th>
+        <th>Stock Traded</th>
+        <th>Trade Price</th>
+        <th> Trade Price Total </th>
+        <th>Trade Date</th>
+      </tr>
+      {% for trades in recent_purchases %}
+      <tr>
+        <td>{{ trades.trade_type }} </td>
+        <td>{{ trades.amount }} </td>
+        <td>{{ trades.trade_price }} </td>
+        <td>{{ trades.trade_price * trades.amount }}
+        <td>{{ trades.trade_date }} </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
 
 {% endblock %}

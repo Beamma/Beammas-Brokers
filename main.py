@@ -23,7 +23,16 @@ app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
 
+def history_price(symbol, period, interval):
+    ticker = yf.Ticker(symbol)
+    history = ticker.history(period=period, interval=interval)
+    return(history)
 
+@cache.cached(timeout=600)
+def info_stock(symbol):
+    ticker = yf.Ticker(symbol)
+    ticker_info = ticker.info
+    return(ticker_info)
 
 @app.route('/')
 def home():
@@ -87,7 +96,7 @@ def all_stock():
 
 
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
-@cache.cached(timeout=120)
+# @cache.cached(timeout=120)
 def stock(symbol):
     maximum = 0
     # Check If user is logged in, if not redirect for login
@@ -108,17 +117,16 @@ def stock(symbol):
     # Get stock price history
     stock_info = models.Stock.query.filter_by(symbol=symbol).first()
     symbol = stock_info.symbol
-    ticker = yf.Ticker(symbol)
-    history = ticker.history(period=period, interval=interval)
-    stock_history = []
-
+    history = history_price(symbol, period, interval)
     # Add date and price in feasable format for graph
+    stock_history = []
     for index in history.index:
         date_price = [index, history.loc[index]['Close']]
         stock_history.append(date_price)
 
+
     # Cacluclate info for given periods
-    ticker_info = ticker.info
+    ticker_info = info_stock(symbol)
     maximum = format(max(history['High']), '.2f')
     low = format(min(history['Low']), '.2f')
     current = ticker_info['currentPrice']
@@ -133,7 +141,7 @@ def stock(symbol):
 
 
 @app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
-@cache.cached(timeout=120)
+# @cache.cached(timeout=120)
 def trade(symbol):
 
     # Check If user is logged in, if not redirect for login
@@ -147,8 +155,8 @@ def trade(symbol):
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
 
         # Get Latest Price
-        ticker = yf.Ticker(symbol)
-        stock_price = float(ticker.info['currentPrice'])
+        ticker_info = info_stock(symbol)
+        stock_price = ticker_info['currentPrice']
 
         # Get portfolio of user
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
@@ -167,11 +175,9 @@ def trade(symbol):
 
             # Buy
             if request.form.get("trade") == "buy":
-
                 # Check to make sure user has enough money to buy
                 if user_balance >= int(request.form.get("amount")) * int(stock_price):
                     trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Buy")
-
                     db.session.add(trade)
                     existing_stock = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
                     purchase_price = int(request.form.get("amount")) * stock_price
@@ -206,7 +212,6 @@ def trade(symbol):
 
                 # If stock amount selling is = to owned, delete completely
                 if portfolio.amount == amount:
-                    print("Sell All")
                     db.session.delete(db.session.merge(portfolio))
                     user_info.balance = user_balance + (int(amount) * int(stock_price))
                     db.session.merge(user_info)

@@ -1,6 +1,6 @@
 import yfinance as yf
 #
-msft = yf.Ticker("MSFT")
+msft = yf.Ticker("TSLA")
 # print(msft)
 # get stock info
 # print(msft.info)
@@ -10,7 +10,7 @@ history = msft.history(period="7d")
 # print(history)
 
 print(max(history['High']))
-print(msft.info)
+print(msft.info['currentPrice'])
 
 # stock_history = []
 # for index in history.index:
