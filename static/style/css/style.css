@@ -42,6 +42,36 @@ nav a:hover{
 }
 
 
+/* Home Styling */
+.home_wrapper{
+  margin: auto;
+  width: 100%;
+  height: 90vh;
+  scroll-behavior: smooth;
+  background-image: url("bround2.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  display: table;
+  top: 0;
+}
+
+.home_wrapper .title {
+  text-align: center;
+  vertical-align: center;
+  margin: 30%;
+  margin-top: 20%;
+}
+.home_wrapper .title p{
+  font-family: 'Oswald', sans-serif;
+  font-size: 500%;
+  text-align: center;
+  color: var(--gold);
+  background-color: var(--charcoal);
+}
+
+
 /* Login And Register Styling */
 .login {
   height: 100vh;
@@ -219,7 +249,7 @@ nav a:hover{
 }
 
 
-/* All Stock */
+/* All Stock Styling */
 
 .all_stock_wrapper{
   background-color: white;
@@ -298,6 +328,8 @@ nav a:hover{
   color: var(--silver);
 }
 
+
+/* User Styling */
 #reciepts {
   display: none;
 }
@@ -306,17 +338,19 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  color: var(--silver);
+  padding: 10%;
 }
 
 td, th {
-  border: 1px solid #dddddd;
+  border: 1px solid var(--gold);
   text-align: left;
   padding: 8px;
 }
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
   background-color: #dddddd;
-}
+} */
 
 /* The Modal (background) */
 .modal {

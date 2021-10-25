@@ -424,12 +424,13 @@ def user():
             # Get Current Stock Price
             stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
             ticker = yf.Ticker(stock.symbol)
-            history = ticker.history(period="1h", interval="1h")
-            stock_history = []
-            for index in history.index:
-                date_price = [index, history.loc[index]['Close']]
-                stock_history.append(date_price)
-            stock_price = stock_history[-1][1]
+            # history = ticker.history(period="1h", interval="1h")
+            # stock_history = []
+            # print(history)
+            # for index in history.index:
+            #     date_price = [index, history.loc[index]['Close']]
+            #     stock_history.append(date_price)
+            stock_price = ticker.info['currentPrice']
 
             # Calculate Actual ROI (Return On Investment) For Each Stock
             total_investment = format(Portfolio[i].total_purchase_price, '.2f')
