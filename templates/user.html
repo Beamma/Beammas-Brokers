@@ -10,53 +10,55 @@
   }
 }
 </script>
-<div class = "content">
+<div class = "user_content">
   <form method="POST">
     <input type="submit" name="LogOut" value="LogOut">
   </form>
-  <a href = "{{ url_for('deposit') }}"> Deposit Money </a>
-  <h1>User Balance: {{ User.balance }}</h1>
-  <table style="width:100%">
-    <tr>
-      <th>Stock</th>
-      <th>Amount</th>
-      <th>Stock Price</th>
-      <th>Investment</th>
-      <th>Value</th>
-      <th>Return</th>
-      <th>ROI</th>
-      <th>Trade</th>
-    </tr>
-      {% for stock in stocks %}
+  <h1><b>User Balance:</b> ${{ User.balance }}</h1>
+  <h1><a href = "{{ url_for('deposit') }}"> Deposit Money </a></h1>
+  <div class="portfolio">
+    <table style="width:100%">
       <tr>
-        <td><a href =  "{{ url_for('stock', symbol = stock[7]) }}"> {{ stock[0] }} </a></td>
-        <td> {{ stock[1] }} </td>
-        <td> {{ stock[2] }} </td>
-        <td> {{ stock[3] }} </td>
-        <td> {{ stock[4] }} </td>
-        <td> {{ stock[5] }} </td>
-        {% if "-" in stock[6] %}
-          <td style="color:red;"> {{ stock[6] }}% </td>
-        {% else: %}
-          <td style="color:green;"> {{ stock[6] }}% </td>
-        {% endif %}
-        <td><a href =  "{{ url_for('trade', symbol = stock[7]) }}"> Trade </a></td>
+        <th>Stock</th>
+        <th>Amount</th>
+        <th>Stock Price</th>
+        <th>Investment</th>
+        <th>Value</th>
+        <th>Return</th>
+        <th>ROI</th>
+        <th>Trade</th>
       </tr>
-      {% endfor %}
-  </table>
-  <p>Portfolio Value: ${{ portfolio_value }}</p>
-  <p>Your Investment: ${{ portfolio_purchase_price }}</p>
-  <p>Net Profit: ${{ net_profit }}</p>
-  {% if "-" in total_ROI: %}
-  <p> Net ROI: <b style="color:red;"">
-      {{ total_ROI }}%
-    </b></p>
-  {% else: %}
-  <p> Net ROI: <b style="color:green;">
-      {{ total_ROI }}%
-    </b></p>
-  {% endif %}
-  <button onclick="showReciepts()">Toggle Reciepts</button>
+        {% for stock in stocks %}
+        <tr>
+          <td><a href =  "{{ url_for('stock', symbol = stock[7]) }}"> {{ stock[0] }} </a></td>
+          <td> {{ stock[1] }} </td>
+          <td> {{ stock[2] }} </td>
+          <td> {{ stock[3] }} </td>
+          <td> {{ stock[4] }} </td>
+          <td> {{ stock[5] }} </td>
+          {% if "-" in stock[6] %}
+            <td style="color:red;"> {{ stock[6] }}% </td>
+          {% else: %}
+            <td style="color:green;"> {{ stock[6] }}% </td>
+          {% endif %}
+          <td><a href =  "{{ url_for('trade', symbol = stock[7]) }}"> Trade </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+  </div>
+  <div class="summary"</div>
+    <b>Portfolio Value:</b> ${{ portfolio_value }}
+    <b>Your Investment:</b> ${{ portfolio_purchase_price }}
+    <b>Net Profit:</b> ${{ net_profit }}
+    {% if "-" in total_ROI: %}
+    <b>  Net ROI:</b> <b style="color:red;"">
+        {{ total_ROI }}% </b>
+    {% else: %}
+    <b>  Net ROI:</b> <b style="color:green;">
+        {{ total_ROI }}%
+    {% endif %}
+    <p><button onclick="showReciepts()">Toggle Reciepts</button></p>
+  </div>
 
   <div id="reciepts">
     <table style="width:100%">

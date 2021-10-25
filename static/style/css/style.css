@@ -330,6 +330,38 @@ nav a:hover{
 
 
 /* User Styling */
+
+.user_content{
+  color: var(--silver);
+  font-family: 'Oswald', sans-serif;
+}
+
+.user_content form{
+  text-align: center;
+}
+
+.user_content form input{
+  background: red;
+}
+
+.user_content b{
+  color: var(--gold);
+}
+
+.user_content h1{
+  text-align: center;
+}
+
+.user_content .summary {
+  text-align: center;
+  font-size: 20px;
+  margin: 20px;
+}
+
+.user_content .summary b{
+  margin: 10px;
+}
+
 #reciepts {
   display: none;
 }
@@ -339,7 +371,6 @@ table {
   border-collapse: collapse;
   width: 100%;
   color: var(--silver);
-  padding: 10%;
 }
 
 td, th {
@@ -347,6 +378,11 @@ td, th {
   text-align: left;
   padding: 8px;
 }
+
+/* .portfolio{
+  width: 100%;
+  padding: 10%;
+} */
 
 /* tr:nth-child(even) {
   background-color: #dddddd;
