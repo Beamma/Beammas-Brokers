@@ -391,7 +391,7 @@ def user():
 
         # Display User reciepts
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
-
+        print(stocks)
         return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
 
 
