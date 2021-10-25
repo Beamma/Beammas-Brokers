@@ -1,10 +1,18 @@
 {% extends 'layout.html' %}
 {% block content %}
-<form method="POST">
-  <input type="number" name="money" placeholder="Money To Deposit" required></input>
-  <input type="number" name="card" placeholder="Card Number" required></input>
-  <input type="month" name="expiriry" placeholder="Expiration Date" required></input>
-  <input type="number" name="cvv" placeholder="CVV" required</input>
-  <input type="submit"></input>
-</form>
+<div class="deposit">
+  <div class="upper_box">
+  </div>
+  <div class="inner_box">
+    <form method="POST">
+      <p><input type="number" name="money" placeholder="Money To Deposit" required></input></p>
+      <p><input type="number" name="card" placeholder="Card Number" required></input></p>
+      <p><input type="month" name="expiriry" placeholder="Expiration Date" required></input></p>
+      <p><input type="number" name="cvv" placeholder="CVV" required</input></p>
+      <div class="submit">
+        <input type="submit"></input>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -403,7 +403,7 @@ font-family: 'Oswald', sans-serif;
   font-size: 40px;
 }
 
-.trade_wrapper select, input{
+.trade_wrapper select input{
   height: 30px;
   width: 90px;
   font-size: 20px;
@@ -463,6 +463,27 @@ font-family: 'Oswald', sans-serif;
   cursor: pointer;
 }
 
+
+/* Deposit Styling */
+.deposit {
+  height: 100vh;
+  width: 100%;
+  background-color: var(--charcoal);
+}
+
+.deposit .inner_box {
+  width: 50%;
+  height: 60%;
+  padding: 5%;
+  margin-left: 20%;
+  margin-right: 20%;
+  padding-bottom: 0%;
+  text-align: center;
+  border-radius: 2%;
+  border: 4px solid var(--gold);
+}
+
+/* Footer Styling */
 footer {
   height: 75px;
   width: 100%;
