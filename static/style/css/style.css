@@ -77,6 +77,10 @@ nav a:hover{
   color: var(--silver);
 }
 
+#reciepts {
+  display: none;
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
