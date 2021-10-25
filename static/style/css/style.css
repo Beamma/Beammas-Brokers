@@ -71,6 +71,10 @@ nav a:hover{
   background-color: var(--charcoal);
 }
 
+.Beamma_Brokers{
+  color: var(--silver);
+  padding: 2%;
+}
 
 /* Login And Register Styling */
 .login {
