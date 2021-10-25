@@ -28,7 +28,7 @@ def history_price(symbol, period, interval):
     history = ticker.history(period=period, interval=interval)
     return(history)
 
-@cache.cached(timeout=600)
+# @cache.cached(timeout=600)
 def info_stock(symbol):
     ticker = yf.Ticker(symbol)
     ticker_info = ticker.info
@@ -133,7 +133,8 @@ def stock(symbol):
     price_change = format((stock_history[-1][1]-stock_history[0][1])/stock_history[0][1]*100, '.2f')
     open = format(stock_history[0][1], '.2f')
     market_cap = ticker_info['marketCap']
-    price_info = {'Max': maximum, 'Low': low, 'Current': current, 'Price_change': price_change, 'Open': open, 'Market_cap': market_cap}
+    yields = ticker_info['fiveYearAvgDividendYield']
+    price_info = {'Max': maximum, 'Low': low, 'Current': current, 'Price Change': price_change, 'Open': open, 'Market Cap': market_cap, 'Five Year Dividend Yield': yields}
 
     return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, price_info = price_info)
 
