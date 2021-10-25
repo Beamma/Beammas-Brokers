@@ -335,13 +335,14 @@ def login():
     if session.get('login', None) != 0:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
+    error = ""
     if request.method == "POST":
         # Get email and make sure an account already exists for said email
         email = request.form.get("email")
         user = models.User.query.filter_by(email=email).first()
         if user is None:
             error_status = "No User With That Email Was Found."
-            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error = error_status)
 
         # Check if users password is correct
         if check_password_hash(user.password, request.form.get("password")) is True:
@@ -354,7 +355,7 @@ def login():
             # Otherwise makesure the user is set as logged out
             session['login'] = 0
             error_status = "Wrong Password"
-            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error_status = error_status)
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error = error_status)
     else:
         return render_template("login.html", status = session.get('login', None), admin = session.get('admin'))
 

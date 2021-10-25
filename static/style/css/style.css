@@ -71,6 +71,13 @@ nav a:hover{
   margin: 1%;
 }
 
+.login .error{
+  height: 20px;
+  font-size: 10px;
+  font-family: font-family: 'Oswald', sans-serif;
+  color: red;
+}
+
 .wrapper {
   min-height: 100vh;
 }
