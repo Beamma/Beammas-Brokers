@@ -1,14 +1,18 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class = "content">
-  <form method="POST">
-    <input type="text" name="user_name" placeholder="User Name" required></input>
-    <input type="password" name="password" placeholder="Password" required></input>
-    <input type="email" name="email" placeholder="Example@Gmail.Com" required></input>
-    <div class = "submit">
-      <input type="submit"></input>
-    </div>
-  </form>
-  {{ error_status }}
+<div class="register">
+  <div class="upper_box">
+  </div>
+  <div class="inner_box">
+    <form method="POST">
+      <input type="text" name="user_name" placeholder="User Name" required></input>
+      <input type="password" name="password" placeholder="Password" required></input>
+      <input type="email" name="email" placeholder="Example@Gmail.Com" required></input>
+      <div class = "submit">
+        <input type="submit"></input>
+      </div>
+    </form>
+    {{ error_status }}
+  </div>
 </div>
 {% endblock %}
