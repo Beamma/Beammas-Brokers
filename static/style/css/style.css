@@ -169,6 +169,55 @@ nav a:hover{
 }
 
 
+/* Stock Styling */
+#chart_div{
+  margin: 0px;
+  float: left;
+  width: 60%;
+  height: 500px;
+}
+
+.stock_page .info{
+  padding: 5%;
+  padding-left: 0%;
+  width: 35%;
+  margin: 0px;
+  float: right;
+  text-align: center;
+}
+
+.stock_page .info{
+  color: var(--gold);
+}
+
+.stock_page .graph_info p{
+  color: var(--silver);
+  width: 40%;
+}
+
+.stock_page .info p{
+  color: var(--silver);
+}
+
+.stock_page .info a{
+  color: var(--gold);
+  font-style: none:
+  font-family:  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+}
+
+.stock_page .trade, .option{
+  margin-left: 10%;
+}
+
+.stock_page .trade, select, input{
+  width: 100px;
+  border-style: none;
+  text-align: center;
+  color: var(--gold);
+  background-color: var(--silver;)
+}
+
 .stock {
   width: 12.5%;
   margin: 0px;
