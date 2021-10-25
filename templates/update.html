@@ -1,23 +1,31 @@
 {% extends 'layout.html' %}
 {% block content %}
   <div class = "update_wrapper">
-    <form method="POST" enctype="multipart/form-data">
-      <div class = "name">
-        <input type="string" name="name" value="{{ stock.name }}"></input>
-      </div>
-      <div class="ticker">
-        <input type="string" name="ticker" value="{{ stock.symbol }}"></input>
-      </div>
-      <div class="logo">
-        <input type="file" name="logo" value="{{ stock.logo }}"></input>
-      </div>
-      <div class="description">
-        <textarea name="description" rows="8" cols="80">{{ stock.description }}</textarea>
-      </div>
-      <input type="string" name="type" value="{{ stock.type }}"></input>
-      <input type="string" name="market" value="{{ stock.market }}"></input>
-      <input type="string" name="category" value="{{ stock.category }}"></input>
-      <input type="submit"></input>
-    </form>
+    <div class="upper_box">
+    </div>
+    <div class="inner_box">
+      <form method="POST" enctype="multipart/form-data">
+        <div class = "name">
+          <input type="string" name="name" value="{{ stock.name }}"></input>
+        </div>
+        <div class="ticker">
+          <input type="string" name="ticker" value="{{ stock.symbol }}"></input>
+        </div>
+        <div class="logo">
+          <input type="file" name="logo" value="{{ stock.logo }}"></input>
+        </div>
+        <div class="description">
+          <textarea name="description" rows="8" cols="80">{{ stock.description }}</textarea>
+        </div>
+        <div class="filters">
+          <input type="string" name="type" value="{{ stock.type }}"></input>
+          <input type="string" name="market" value="{{ stock.market }}"></input>
+          <input type="string" name="category" value="{{ stock.category }}"></input>
+        </div>
+        <div class="submit">
+          <input type="submit"></input>
+        </div>
+      </form>
+    </div>
   </div>
 {% endblock %}

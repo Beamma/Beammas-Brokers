@@ -414,7 +414,7 @@ font-family: 'Oswald', sans-serif;
   text-align: center;
   height: 30px;
   font-size: 20px;
-  font-family: font-family: 'Oswald', sans-serif;
+  font-family:'Oswald', sans-serif;
   color: red;
   margin-top: 10px;
 }
@@ -477,12 +477,58 @@ font-family: 'Oswald', sans-serif;
   padding: 5%;
   margin-left: 20%;
   margin-right: 20%;
-  padding-bottom: 0%;
+  padding-bottom: 5%;
   text-align: center;
   border-radius: 2%;
   border: 4px solid var(--gold);
 }
 
+
+/* Update Styling */
+.update_wrapper{
+font-size: 20px;
+font-family: 'Oswald', sans-serif
+}
+
+.update_wrapper textarea{
+  background-color: var(--silver)
+}
+
+.update_wrapper .inner_box {
+  width: 50%;
+  height: 60%;
+  padding: 5%;
+  margin-left: 20%;
+  margin-right: 20%;
+  padding-bottom: 5%;
+  text-align: center;
+  border-radius: 2%;
+  border: 4px solid var(--gold);
+}
+
+.update_wrapper .name{
+  text-align: center;
+}
+
+.update_wrapper .ticker{
+  text-align: center;
+}
+
+.update_wrapper .logo{
+  text-align: center;
+}
+
+.update_wrapper .description{
+  text-align: center;
+}
+
+.update_wrapper .filters{
+  text-align: center;
+}
+
+.update_wrapper .submit{
+  text-align: center;
+}
 /* Footer Styling */
 footer {
   height: 75px;
