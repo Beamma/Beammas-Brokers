@@ -41,7 +41,44 @@ def all_stock():
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
 
-    stock_info = models.Stock.query.all()
+    if request.method == "POST":
+        # Search for stock
+        search = request.form.get('search')
+        if search:
+            stock_info = models.Stock.query.filter_by(symbol=search).all()
+        else:
+
+            # Stock Filters
+            type = request.form.get('type')
+            category = request.form.get('category')
+            market = request.form.get('exchange')
+            if type != "All" and category != "All" and market != "All":
+                stock_info = models.Stock.query.filter_by(type=type, category=category, market=market).all()
+
+            if type != "All" and category != "All" and market == "All":
+                stock_info = models.Stock.query.filter_by(type=type, category=category).all()
+
+            if type != "All" and category == "All" and market != "All":
+                stock_info = models.Stock.query.filter_by(type=type, market=market).all()
+
+            if type == "All" and category != "All" and market != "All":
+                stock_info = models.Stock.query.filter_by(category=category, market=market).all()
+
+            if type != "All" and category == "All" and market == "All":
+                stock_info = models.Stock.query.filter_by(type=type).all()
+
+            if type == "All" and category != "All" and market == "All":
+                stock_info = models.Stock.query.filter_by(category=category).all()
+
+            if type == "All" and category == "All" and market != "All":
+                stock_info = models.Stock.query.filter_by(market=market).all()
+
+            if type == "All" and category == "All" and market == "All":
+                stock_info = models.Stock.query.all()
+
+        return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'))
+    else:
+        stock_info = models.Stock.query.all()
     return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'))
 
 
@@ -408,11 +445,14 @@ def user():
 
 @app.route('/user/deposit', methods=['GET', 'POST'])
 def deposit():
+    # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
 
     else:
         if request.method == "POST":
+
+            # Get user and update balance
             user = models.User.query.filter_by(id=session.get('login', None)).first()
             user.balance = int(request.form.get('money')) + user.balance
             db.session.merge(user)

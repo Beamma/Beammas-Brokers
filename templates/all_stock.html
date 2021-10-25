@@ -1,6 +1,46 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="all_stock_wrapper">
+      <div class="stock_filter">
+        <form method="POST">
+          <div class="search">
+            <input type="text" name="search" placeholder="Stock Ticker"></input>
+          </div>
+          <div class = "type">
+            <input type="radio" name="type" value="All" checked></input>
+            <label for="ALL">ALL</label>
+            <input type="radio" name="type" value="Company"></input>
+            <label for="Company">Company</label>
+            <input type="radio" name="type" value="ETF"></input>
+            <label for="ETF">ETF</label>
+            <input type="radio" name="type" value="Fund"></input>
+            <label for="Fund">Fund</label>
+          </div>
+          <div class = "category">
+            <input type="radio" name="category" value="All" checked></input>
+            <label for="ALL">ALL</label>
+            <input type="radio" name="category" value="Tech"></input>
+            <label for="Tech">Tech</label>
+            <input type="radio" name="category" value="Agriculture"></input>
+            <label for="Agriculture">Agriculture</label>
+            <input type="radio" name="category" value="Retail"></input>
+            <label for="Retail">Retail</label>
+            <input type="radio" name="category" value="Finance"></input>
+            <label for="Finance">Finance</label>
+            <input type="radio" name="category" value="Automotive"></input>
+            <label for="Automotive">Automotive</label>
+          </div>
+          <div class = "exchange">
+            <input type="radio" name="exchange" value="All" checked></input>
+            <label for="ALL">ALL</label>
+            <input type="radio" name="exchange" value="NASDAQ"></input>
+            <label for="NASDAQ">NASDAQ</label>
+            <input type="radio" name="exchange" value="NYSE"></input>
+            <label for="NYSE">NYSE</label>
+          </div>
+          <input type="submit"></input>
+        </form>
+      </div>
       {% for stocks in stock_info %}
         <div class="stock">
           <div class="stock_image">
