@@ -133,7 +133,7 @@ nav a:hover{
 }
 
 .create_delete_radio {
-  color: var(--gold);
+  color: var(--silver);
   font-family: font-family: 'Oswald', sans-serif;
   font-size: 30px;
   width: 100%;
