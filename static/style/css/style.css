@@ -13,6 +13,7 @@ body{
   margin: 0px;
   height: 100%;
   overflow-x: hidden;
+  font-family: 'Oswald', sans-serif
 }
 
 .wrapper {
@@ -27,6 +28,7 @@ nav{
   background-color: var(--charcoal);
   height: 10vh;
   text-align: center;
+  border-bottom: 4px solid var(--silver);
 }
 
 nav a{
@@ -69,6 +71,7 @@ nav a:hover{
   text-align: center;
   color: var(--gold);
   background-color: var(--charcoal);
+  border: 10px solid var(--silver);
 }
 
 .Beamma_Brokers{
@@ -99,11 +102,11 @@ nav a:hover{
   padding: 5%;
   margin-left: 20%;
   margin-right: 20%;
-  padding-top: 10%;
   padding-bottom: 0%;
   text-align: center;
   border-radius: 2%;
   border: 4px solid var(--gold);
+  color: var(--silver);
 }
 
 .inner_box input{
@@ -218,15 +221,23 @@ nav a:hover{
   margin: 0px;
   float: right;
   text-align: center;
+  font-size: 15px;
 }
 
 .stock_page .info{
   color: var(--gold);
 }
 
+.stock_page .graph_info{
+  margin-right: 60%;
+  margin-top: 10px;
+  border: 4px solid var(--silver);
+}
+
 .stock_page .graph_info p{
   color: var(--silver);
-  width: 40%;
+  font-size: 15px;
+  text-align: center;
 }
 
 .stock_page .info p{
@@ -256,7 +267,7 @@ nav a:hover{
 /* All Stock Styling */
 
 .all_stock_wrapper{
-  background-color: white;
+  /* background-color: white; */
   height: 100vh;
 }
 
@@ -271,6 +282,9 @@ nav a:hover{
   color: var(--silver);
 }
 
+.stock_filter form{
+  border-right: 4px solid var(--silver);
+}
 .stock_filter b{
   color: var(--gold);
 }
@@ -291,8 +305,12 @@ nav a:hover{
 
 .stock {
   width: 12.5%;
-  margin: 0px;
+  margin: 10px;
+  margin-right: 0px;
   float: left;
+  border: 4px solid var(--silver);
+  background: white;
+  /* margin-left: 10px; */
 }
 
 .stock_image {
@@ -340,12 +358,17 @@ nav a:hover{
   font-family: 'Oswald', sans-serif;
 }
 
+.user_content a{
+  color: var(--silver);
+}
+
 .user_content form{
   text-align: center;
 }
 
 .user_content form input{
-  background: red;
+  background: var(--silver);
+  border: none;
 }
 
 .user_content b{
@@ -371,7 +394,6 @@ nav a:hover{
 }
 
 table {
-  font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
   color: var(--silver);
@@ -381,6 +403,10 @@ td, th {
   border: 1px solid var(--gold);
   text-align: left;
   padding: 8px;
+}
+
+table a{
+  color: var(--silver);
 }
 
 
@@ -491,7 +517,8 @@ font-family: 'Oswald', sans-serif;
 /* Update Styling */
 .update_wrapper{
 font-size: 20px;
-font-family: 'Oswald', sans-serif
+font-family: 'Oswald', sans-serif;
+color: var(--gold);
 }
 
 .update_wrapper textarea{
@@ -504,6 +531,8 @@ font-family: 'Oswald', sans-serif
   padding: 5%;
   margin-left: 20%;
   margin-right: 20%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   padding-bottom: 5%;
   text-align: center;
   border-radius: 2%;
@@ -533,6 +562,12 @@ font-family: 'Oswald', sans-serif
 .update_wrapper .submit{
   text-align: center;
 }
+
+.lower_box{
+  height: 1vh;
+}
+
+
 /* Footer Styling */
 footer {
   height: 75px;
@@ -544,6 +579,7 @@ footer {
   text-align: center;
   margin: 0px;
   position: absolute;
+  border-top: 4px solid var(--silver);
 }
 
 footer p {
