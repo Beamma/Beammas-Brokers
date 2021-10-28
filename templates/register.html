@@ -7,12 +7,9 @@
     <form method="POST" enctype="multipart/form-data">
       <h1> Register </h1>
       {{ form.csrf_token }}
-      <!-- <input type="text" name="user_name" placeholder="User Name" required></input>
-      <input type="password" name="password" placeholder="Password" required></input>
-      <input type="email" name="email" placeholder="Example@Gmail.Com" required></input> -->
-      {{ form.user_name }}
-      {{ form.password }}
-      {{ form.email }}
+      {{ form.user_name(placeholder="Name") }}
+      {{ form.email(placeholder="Examle@Email.com") }}
+      {{ form.password(placeholder="Password") }}
       <div class="error">
         {{ form.user_name.errors[0] }}
         {{ form.password.errors[0] }}

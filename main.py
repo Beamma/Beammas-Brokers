@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
-from forms import Register
+from forms import Register, Login
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -304,9 +304,6 @@ def update():
     if session.get('admin') == 1 and update != None:
         stock = models.Stock.query.filter_by(symbol=update).first()
         if request.method == "POST":
-
-            # Update fields
-
             # Check if new img been uploaded if so, update if not pass
             if not request.files.get('file', None):
                 pass
@@ -333,22 +330,22 @@ def update():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
+    form = Login()
     # Make sure user isnt already logged in
     if session.get('login', None) != 0:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
-    error = ""
     if request.method == "POST":
-        # Get email and make sure an account already exists for said email
-        email = request.form.get("email")
-        user = models.User.query.filter_by(email=email).first()
-        if user is None:
-            error_status = "No User With That Email Was Found."
-            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error = error_status)
+        # Get forms and check if valid
+        if form.validate_on_submit():
+            email = form.email.data
+            password = form.password.data
+        else:
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), form=form)
 
         # Check if users password is correct
-        if check_password_hash(user.password, request.form.get("password")) is True:
+        user = models.User.query.filter_by(email=email).first()
+        if check_password_hash(user.password, password) is True:
             # Set users session, (making them logged in)
             session['login'] = user.id
             session['admin'] = user.admin
@@ -358,9 +355,9 @@ def login():
             # Otherwise makesure the user is set as logged out
             session['login'] = 0
             error_status = "Wrong Password"
-            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error = error_status)
+            return render_template('login.html', status = session.get('login', None), admin = session.get('admin'), error = error_status, form=form)
     else:
-        return render_template("login.html", status = session.get('login', None), admin = session.get('admin'))
+        return render_template("login.html", status = session.get('login', None), admin = session.get('admin'), form=form)
 
 
 
@@ -379,7 +376,6 @@ def register():
             name = form.user_name.data
             email = form.email.data
             password = form.password.data
-            print(name, email, password)
             # Add user to data base
             user = models.User(name=name, password=generate_password_hash(password), email=email, admin=0, balance='1000')
             db.session.add(user)

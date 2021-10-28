@@ -13,9 +13,6 @@ class User(db.Model):
     # stocks_sell = db.relationship('Sold_Stock', back_populates='user')
     stocks_portfolio = db.relationship('Portfolio', back_populates='user')
 
-    def __repr__(self):
-        return f'<User {self.id, self.name, self.email, self.password, self.ird, self.address, self.bank, self.card, self.balance}>'
-
 class Stock(db.Model):
     __tablename__ = 'Stock'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
