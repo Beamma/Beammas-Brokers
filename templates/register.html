@@ -4,11 +4,20 @@
   <div class="upper_box">
   </div>
   <div class="inner_box">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <h1> Register </h1>
-      <input type="text" name="user_name" placeholder="User Name" required></input>
+      {{ form.csrf_token }}
+      <!-- <input type="text" name="user_name" placeholder="User Name" required></input>
       <input type="password" name="password" placeholder="Password" required></input>
-      <input type="email" name="email" placeholder="Example@Gmail.Com" required></input>
+      <input type="email" name="email" placeholder="Example@Gmail.Com" required></input> -->
+      {{ form.user_name }}
+      {{ form.password }}
+      {{ form.email }}
+      <div class="error">
+        {{ form.user_name.errors[0] }}
+        {{ form.password.errors[0] }}
+        {{ form.email.errors[0] }}
+      </div>
       <div class = "submit">
         <input type="submit"></input>
       </div>

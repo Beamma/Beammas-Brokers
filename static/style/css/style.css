@@ -142,28 +142,28 @@ nav a:hover{
 }
 
 .create_delete_radio .create{
-  width: 33.3%;
+  width: 32%;
   margin: 0px;
   height: 100%;
   float: left;
 }
 
 .create_delete_radio .update{
-  width: 33.3%;
+  width: 32%;
   margin: 0px;
   height: 100%;
   float: left;
 }
 
 .create_delete_radio .delete{
-  width: 33.3%;
+  width: 32%;
   margin: 0px;
   height: 100%;
   float: right;
 }
 
 .create_stock {
-  width: 28.8%;
+  width: 28%;
   height: 50vh;
   float: left;
   text-align: center;
@@ -175,7 +175,7 @@ nav a:hover{
 }
 
 .delete_stock {
-  width: 28.8%;
+  width: 28%;
   height: 50vh;
   float: right;
   text-align: center;
@@ -187,7 +187,7 @@ nav a:hover{
 }
 
 .update_stock {
-  width: 28.8%;
+  width: 28%;
   height: 50vh;
   float: left;
   text-align: center;
@@ -471,10 +471,10 @@ font-family: 'Oswald', sans-serif;
 
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--charcoal);
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid var(--gold);
   width: 80%;
 }
 

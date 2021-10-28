@@ -57,7 +57,9 @@
     <b>  Net ROI:</b> <b style="color:green;">
         {{ total_ROI }}%
     {% endif %}
-    <p><button onclick="showReciepts()">Toggle Reciepts</button></p>
+    {% if no_reciepts != True: %}
+      <p><button onclick="showReciepts()">Toggle Reciepts</button></p>
+    {% endif %}
   </div>
 
   <div id="reciepts">

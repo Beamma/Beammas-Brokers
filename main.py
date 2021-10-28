@@ -18,10 +18,13 @@ app = Flask(__name__)
 app.config.from_object(Config)  # applying all config to app
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
+WTF_CSRF_ENABLED = True
+WTF_CSRF_SECRET_KEY = 'sup3r_secr3t_passw3rd'
 db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
+from forms import Register
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -152,7 +155,7 @@ def trade(symbol):
     else:
         # Get essential info
         user_info = models.User.query.filter_by(id=session.get('login', None)).first()
-        user_balance = format(user_info.balance, '.2f')
+        user_balance = user_info.balance
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
 
         # Get Latest Price
@@ -196,7 +199,7 @@ def trade(symbol):
                         db.session.add(portfolio)
 
                     # Update User Balance (Subtract Price * Amount)
-                    user_balance = user_balance - purchase_price
+                    user_balance = format(user_balance - purchase_price, ".2f")
                     user_info.balance = user_balance
                     db.session.merge(user_info)
                     db.session.commit()
@@ -366,29 +369,31 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    form = Register()
     if session.get('login', None) != 0:
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
     if request.method == "POST":
 
-        # Retreive User And Password, Hash Password
-        email = request.form.get("email")
-        user = models.User.query.all()
-        for user in user:
-            if email == user.email:
-                error_status = "An account with this email already exists."
-                return render_template ('register.html', status = session.get('login', None), admin = session.get('admin'), error_status=error_status)
+        # Retreive form
+        if form.validate_on_submit():
+            name = form.user_name.data
+            email = form.email.data
+            password = form.password.data
+            print(name, email, password)
+            # Add user to data base
+            user = models.User(name=name, password=generate_password_hash(password), email=email, admin=0, balance='1000')
+            db.session.add(user)
+            db.session.commit()
 
-        # Add user to data base
-        user = models.User(name=request.form.get("user_name"), password=generate_password_hash(request.form.get("password")), email=email, admin=0, balance='1000')
-        db.session.add(user)
-        db.session.commit()
-
-        # Log user in using id
-        user = models.User.query.filter_by(email=email).first()
-        session['login'] = user.id
-        return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
+            # Log user in using id
+            user = models.User.query.filter_by(email=email).first()
+            session['login'] = user.id
+            return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin'), form=form))
+        # If form not valid return errors
+        else:
+            return render_template("register.html", status = session.get('login', None), admin = session.get('admin'), form=form)
     else:
-        return render_template("register.html", status = session.get('login', None), admin = session.get('admin'))
+        return render_template("register.html", status = session.get('login', None), admin = session.get('admin'), form=form)
 
 
 
@@ -413,7 +418,9 @@ def user():
         User = models.User.query.filter_by(id=session.get('login', None)).first()
         user_balance = format(User.balance, '.2f')
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
-
+        print(Portfolio)
+        if Portfolio == []:
+            return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, user_balance=user_balance, portfolio_value="0", portfolio_purchase_price="0", net_profit="0", total_ROI="0", no_reciepts=True)
         # Calculate portfolio value and purchase price
         stocks = []
         portfolio_value = 0
