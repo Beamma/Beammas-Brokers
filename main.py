@@ -241,10 +241,10 @@ def trade(symbol):
                 # Otherwise dont allow any sell and send error message
                 else:
                     error_status = "Failed. You Do Not Own Enough Stock."
-                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, error_status=error_status)
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases)
+        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases)
 
 
 
