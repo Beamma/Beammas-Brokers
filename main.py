@@ -130,10 +130,17 @@ def stock(symbol):
 
 
     # Cacluclate info for given periods
+    ticker = yf.Ticker(symbol)
+    history = ticker.history(period="1h", interval="1h")
+    current_price = []
+    for index in history.index:
+        date_price = [index, history.loc[index]['Close']]
+        current_price.append(date_price)
+    current = format(current_price[-1][1], ".2f")
+
     ticker_info = info_stock(symbol)
     maximum = format(max(history['High']), '.2f')
     low = format(min(history['Low']), '.2f')
-    current = ticker_info['currentPrice']
     price_change = format((stock_history[-1][1]-stock_history[0][1])/stock_history[0][1]*100, '.2f')
     open = format(stock_history[0][1], '.2f')
     market_cap = ticker_info['marketCap']
@@ -162,7 +169,13 @@ def trade(symbol):
 
         # Get Latest Price
         ticker_info = info_stock(symbol)
-        stock_price = ticker_info['currentPrice']
+        ticker = yf.Ticker(symbol)
+        history = ticker.history(period="1h", interval="1h")
+        current_price = []
+        for index in history.index:
+            date_price = [index, history.loc[index]['Close']]
+            current_price.append(date_price)
+        stock_price = current_price[-1][1]
 
         # Get portfolio of user
         portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock_info.id).first()
@@ -183,10 +196,9 @@ def trade(symbol):
                 trade = form.trade.data
                 amount = form.amount.data
             else:
-                return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
+                return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = format(stock_price, ".2f"), user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
             # Buy
             if trade == "Buy":
-                print("buy")
                 # Check to make sure user has enough money to buy
                 if user_balance >= amount * int(stock_price):
                     trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Buy")
@@ -214,7 +226,7 @@ def trade(symbol):
 
                 else:
                     error_status = "Failed. You Currently Cannot Afford" # set error status
-                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status, form=form)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = format(stock_price, ".2f"), user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status, form=form)
 
             # Sell
             if trade == "Sell":
@@ -249,10 +261,10 @@ def trade(symbol):
                 # Otherwise dont allow any sell and send error message
                 else:
                     error_status = "Failed. You Do Not Own Enough Stock."
-                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, error_status=error_status, form=form)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = format(stock_price, ".2f"), user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, error_status=error_status, form=form)
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
+        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = format(stock_price, ".2f"), user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
 
 
 
@@ -265,8 +277,9 @@ def admin():
         return redirect(url_for('home', status = session.get('login', None), admin = session.get('admin')))
 
     else:
+        delete_status = ""
         update_status = "" # Set update status to false (no error status)
-        submitted = False # Set submitted status to false (no error status)
+        submitted = None # Set submitted status to false (no error status)
 
         if request.method == "POST":
 
@@ -275,12 +288,18 @@ def admin():
             if radio == "create":
                 # Create
                 img_file = request.files["logo"]
-                img_file.save(os.path.join("static/", img_file.filename))
-                img_location =img_file.filename
                 symbol=request.form.get("ticker")
                 ticker = yf.Ticker(symbol)
                 ticker_info = ticker.info
-                stock = models.Stock(name=ticker_info['shortName'], logo=img_location, description=request.form.get("longBusinessSummary"), symbol=symbol, type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
+                # Check to see if inputs valid
+                valid = [img_file, ticker_info, request.form.get("type"), request.form.get("market"), request.form.get("category")]
+                if "" in valid:
+                    submitted = False
+                    return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), delete_status=delete_status, submitted=submitted, update_status=update_status)
+                img_file.save(os.path.join("static/", img_file.filename))
+                img_location =img_file.filename
+
+                stock = models.Stock(name=ticker_info['shortName'], logo=img_location, description=ticker_info["longBusinessSummary"], symbol=symbol, type=request.form.get("type"), market=request.form.get("market"), category=request.form.get("category"))
                 db.session.add(stock)
                 db.session.commit()
                 submitted = True
@@ -288,8 +307,12 @@ def admin():
                 # Delete
                 delete_stock = request.form.get("delete")
                 delete = models.Stock.query.filter_by(symbol=delete_stock).first()
-                db.session.delete(db.session.merge(delete))
-                db.session.commit()
+                if delete is None:
+                    delete_status = "Invalid Stock Ticker"
+                else:
+                    db.session.delete(db.session.merge(delete))
+                    db.session.commit()
+                    delete_status = "Deleted Stock"
             if radio == "update":
                 # Update
                 update = request.form.get("update")
@@ -300,7 +323,7 @@ def admin():
                     return redirect(url_for("update"))
                 else:
                     update_status = "Failed Stock Doesnt Exist" # pass error status
-        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), submitted=submitted, update_status=update_status)
+        return render_template('admin.html', status = session.get('login', None), admin = session.get('admin'), delete_status=delete_status, submitted=submitted, update_status=update_status)
 
 
 
@@ -436,13 +459,12 @@ def user():
             # Get Current Stock Price
             stock = models.Stock.query.filter_by(id=Portfolio[i].stock_id).first()
             ticker = yf.Ticker(stock.symbol)
-            # history = ticker.history(period="1h", interval="1h")
-            # stock_history = []
-            # print(history)
-            # for index in history.index:
-            #     date_price = [index, history.loc[index]['Close']]
-            #     stock_history.append(date_price)
-            stock_price = ticker.info['currentPrice']
+            history = ticker.history(period="1h", interval="1h")
+            stock_history = []
+            for index in history.index:
+                date_price = [index, history.loc[index]['Close']]
+                stock_history.append(date_price)
+            stock_price = stock_history[-1][1]
 
             # Calculate Actual ROI (Return On Investment) For Each Stock
             total_investment = format(Portfolio[i].total_purchase_price, '.2f')

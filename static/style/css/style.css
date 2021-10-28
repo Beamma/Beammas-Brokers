@@ -226,6 +226,7 @@ nav a:hover{
 
 .stock_page .info{
   color: var(--gold);
+  height: 100vh;
 }
 
 .stock_page .graph_info{
@@ -249,6 +250,10 @@ nav a:hover{
   font-style: none:
   font-family:  font-family: 'Oswald', sans-serif;
   font-size: 20px;
+}
+
+.bottom{
+  height: 20vh;
 }
 
 .stock_page .trade, .option{

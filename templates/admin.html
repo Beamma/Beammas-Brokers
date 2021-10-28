@@ -25,12 +25,18 @@
         <p><input type="string" name="category" placeholder="Stock Category"></input></p>
         <p><input type="submit"></input>
         {% if submitted == True: %}
-          Completed
+          <p>Completed</p>
+        {% elif submitted == None: %}
+          <p></p>
+        {% else: %}
+          <p>Failed, Please Fill Out All Fields</p>
         {% endif %}
+
       </div>
       <div class="delete_stock">
         <p><input type="string" name="delete" placeholder="Stock To Delete"></input></p>
         <p><input type="submit"></input></p>
+        <p>{{ delete_status }}</p>
       </div>
       <div class="update_stock">
         <p><input type="string" name="update" placeholder="Stock To Update"></input></p>
