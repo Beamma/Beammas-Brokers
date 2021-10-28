@@ -152,7 +152,7 @@ def trade(symbol):
     else:
         # Get essential info
         user_info = models.User.query.filter_by(id=session.get('login', None)).first()
-        user_balance = user_info.balance
+        user_balance = format(user_info.balance, '.2f')
         stock_info = models.Stock.query.filter_by(symbol=symbol).first()
 
         # Get Latest Price
@@ -411,6 +411,7 @@ def user():
     else:
         # Get user info and there portfolio
         User = models.User.query.filter_by(id=session.get('login', None)).first()
+        user_balance = format(User.balance, '.2f')
         Portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None)).all()
 
         # Calculate portfolio value and purchase price
@@ -450,7 +451,7 @@ def user():
 
         # Display User reciepts
         recent_purchases = models.Trade_Info.query.filter_by(user_id=session.get('login', None)).order_by(models.Trade_Info.id.desc()).all()
-        return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases)
+        return render_template('user.html', status = session.get('login', None), admin = session.get('admin'), User=User, stocks=stocks, portfolio_value=format(portfolio_value, '.2f'), portfolio_purchase_price=format(portfolio_purchase_price, '.2f'), net_profit=format(net_profit, '.2f'), total_ROI=format(total_ROI, '.2f'), recent_purchases=recent_purchases, user_balance=user_balance)
 
 
 

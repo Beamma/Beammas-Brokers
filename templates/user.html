@@ -14,7 +14,7 @@
   <form method="POST">
     <input type="submit" name="LogOut" value="LogOut">
   </form>
-  <h1><b>User Balance:</b> ${{ User.balance }}</h1>
+  <h1><b>User Balance:</b> ${{ user_balance }}</h1>
   <h1><a href = "{{ url_for('deposit') }}"> Deposit Money </a></h1>
   <div class="portfolio">
     <table style="width:100%">
@@ -33,9 +33,9 @@
           <td><a href =  "{{ url_for('stock', symbol = stock[7]) }}"> {{ stock[0] }} </a></td>
           <td> {{ stock[1] }} </td>
           <td> {{ stock[2] }} </td>
-          <td> {{ stock[3] }} </td>
-          <td> {{ stock[4] }} </td>
-          <td> {{ stock[5] }} </td>
+          <td> ${{ stock[3] }} </td>
+          <td> ${{ stock[4] }} </td>
+          <td> ${{ stock[5] }} </td>
           {% if "-" in stock[6] %}
             <td style="color:red;"> {{ stock[6] }}% </td>
           {% else: %}
@@ -75,8 +75,8 @@
         <td>{{ trades.stock.name }} </td>
         <td>{{ trades.trade_type }} </td>
         <td>{{ trades.amount }} </td>
-        <td>{{ trades.trade_price }} </td>
-        <td>{{ trades.trade_price * trades.amount }}
+        <td>${{ trades.trade_price }} </td>
+        <td>${{ trades.trade_price * trades.amount }}
         <td>{{ trades.trade_date }} </td>
       </tr>
       {% endfor %}

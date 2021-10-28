@@ -12,9 +12,9 @@
   }
   </script>
   <div class="info">
-    <b>Stock Price: </b> {{ stock_price }}
+    <b>Stock Price: </b> ${{ stock_price }}
     <b>Stocks Owned: </b> {{ stocks_owned }}
-    <b>User Balance: </b> {{ user_balance }}
+    <b>User Balance: </b> ${{ user_balance }}
   </div>
   <div class="transaction">
     <form method="POST">
@@ -95,8 +95,8 @@
         <tr>
           <td>{{ trades.trade_type }} </td>
           <td>{{ trades.amount }} </td>
-          <td>{{ trades.trade_price }} </td>
-          <td>{{ trades.trade_price * trades.amount }}
+          <td>${{ trades.trade_price }} </td>
+          <td>${{ trades.trade_price * trades.amount }}
           <td>{{ trades.trade_date }} </td>
         </tr>
         {% endfor %}
