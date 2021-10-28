@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, TextField, TextAreaField, SelectField, StringField, PasswordField, RadioField
-from wtforms.widgets import PasswordInput
+from wtforms import IntegerField, TextField, TextAreaField, SelectField, StringField, PasswordField, RadioField, DateField
+from wtforms.widgets import PasswordInput, html5
+from wtforms.fields import html5 as h5fields
 from wtforms.validators import DataRequired, Optional, ValidationError, Email
 import models
 from datetime import datetime
@@ -31,8 +32,7 @@ class Login(FlaskForm):
 class Trade(FlaskForm):
 
     trade = SelectField("trade", validators=[DataRequired()])
-    amount = IntegerField("amount", validators=[DataRequired()])
-
+    amount = h5fields.IntegerField("amount", widget=html5.NumberInput(), validators=[DataRequired()])
 
 class Stock(FlaskForm):
 
@@ -45,3 +45,10 @@ class All_Stock(FlaskForm):
     type = RadioField("type", choices=[("All", "All"), ("Company", "Company"), ("ETF", "ETF"), ("Fund", "Fund")], default="All", validators=[DataRequired()])
     category = RadioField("category", choices=[("All", "All"), ("Tech", "Tech"), ("Agriculture", "Agriculture"), ("Retail", "Retail"), ("Finance", "Finance"), ("Automotive", "Automotive")], default="All", validators=[DataRequired()])
     exchange = RadioField("exchange", choices=[("All", "All"), ("NASDAQ", "NASDAQ"), ("NYSE", "NYSE")], default="All", validators=[DataRequired()])
+
+
+class Deposit(FlaskForm):
+
+    money = IntegerField("money", widget=html5.NumberInput(), validators=[DataRequired()])
+    card = h5fields.IntegerField("card", widget=html5.NumberInput(), validators=[DataRequired()])
+    cvv = h5fields.IntegerField("cvv", widget=html5.NumberInput(), validators=[DataRequired()])

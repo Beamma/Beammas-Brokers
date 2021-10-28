@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
-from forms import Register, Login, Trade, Stock, All_Stock
+from forms import Register, Login, Trade, Stock, All_Stock, Deposit
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -468,6 +468,9 @@ def user():
 
 @app.route('/user/deposit', methods=['GET', 'POST'])
 def deposit():
+    form = Deposit()
+    user = models.User.query.filter_by(id=session.get('login', None)).first()
+    work_status = ""
     # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
@@ -475,13 +478,18 @@ def deposit():
     else:
         if request.method == "POST":
 
-            # Get user and update balance
-            user = models.User.query.filter_by(id=session.get('login', None)).first()
-            user.balance = int(request.form.get('money')) + user.balance
+            if form.validate_on_submit():
+                work_status="Failed Please Try Again"
+            else:
+                work_status="Funds Deposited"
+            money = form.money.data
+
+            # update balance
+            user.balance = money + user.balance
             db.session.merge(user)
             db.session.commit()
 
-    return render_template('deposit.html', status = session.get('login', None), admin = session.get('admin'))
+    return render_template('deposit.html', status = session.get('login', None), admin = session.get('admin'), form=form, user=user, work_status=work_status)
 
 
 if __name__ == "__main__":

@@ -5,13 +5,15 @@
   </div>
   <div class="inner_box">
     <form method="POST">
-      <p><input type="number" name="money" placeholder="Money To Deposit" required></input></p>
-      <p><input type="number" name="card" placeholder="Card Number" required></input></p>
-      <p><input type="month" name="expiriry" placeholder="Expiration Date" required></input></p>
-      <p><input type="number" name="cvv" placeholder="CVV" required</input></p>
+      <h1> Deposit Funds </h1>
+      <p> Current Balance: ${{ user.balance }}</p>
+      <p>{{ form.money(placeholder="Amount Of Money") }}</p>
+      <p>{{ form.card(placeholder="Card Number") }}</p>
+      <p>{{ form.cvv(placeholder="CVV") }}</p>
       <div class="submit">
         <input type="submit"></input>
       </div>
+      <p>{{ work_status }}</p>
     </form>
   </div>
 </div>
