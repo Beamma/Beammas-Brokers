@@ -18,11 +18,9 @@
   </div>
   <div class="transaction">
     <form method="POST">
-      <select name="trade" id="trade" required>
-        <option value="buy">Buy</option>
-        <option value="sell">Sell</option>
-      </select>
-      <input type="number"  name="amount" id="user_input" placeholder="Number Of Shares"></input>
+      {{ form.csrf_token }}
+      {{ form.trade(id="trade") }}
+      {{ form.amount(placeholder="Amount", id="user_input") }}
 
       <!-- Trigger/Open The Modal -->
       <button type="button" id="myBtn" >Submit</button>

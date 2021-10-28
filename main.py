@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
-from forms import Register, Login
+from forms import Register, Login, Trade
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -147,7 +147,8 @@ def stock(symbol):
 @app.route('/stock/trade/<symbol>', methods=["GET", "POST"])
 # @cache.cached(timeout=120)
 def trade(symbol):
-
+    form = Trade()
+    form.trade.choices = [("Buy", "Buy"), ("Sell", "Sell")]
     # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
@@ -177,10 +178,16 @@ def trade(symbol):
         if request.method == "POST":
             stock = models.Stock.query.filter_by(symbol=symbol).all()
 
+            if form.validate_on_submit():
+                trade = form.trade.data
+                amount = form.amount.data
+            else:
+                return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
             # Buy
-            if request.form.get("trade") == "buy":
+            if trade == "Buy":
+                print("buy")
                 # Check to make sure user has enough money to buy
-                if user_balance >= int(request.form.get("amount")) * int(stock_price):
+                if user_balance >= amount * int(stock_price):
                     trade = models.Trade_Info(stock_id=stock[0].id, user_id=session.get('login', None), amount=request.form.get("amount"), trade_price=stock_price, trade_date=datetime.datetime.now(), trade_type="Buy")
                     db.session.add(trade)
                     existing_stock = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
@@ -206,10 +213,10 @@ def trade(symbol):
 
                 else:
                     error_status = "Failed. You Currently Cannot Afford" # set error status
-                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=user_balance, recent_purchases=recent_purchases, error_status=error_status, form=form)
 
             # Sell
-            if request.form.get("trade") == "sell":
+            if trade == "Sell":
                 # Get amount of stock user want to sell, and amount of stock user has
                 amount = int(request.form.get("amount"))
                 portfolio = models.Portfolio.query.filter_by(user_id=session.get('login', None), stock_id=stock[0].id).first()
@@ -241,10 +248,10 @@ def trade(symbol):
                 # Otherwise dont allow any sell and send error message
                 else:
                     error_status = "Failed. You Do Not Own Enough Stock."
-                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, error_status=error_status)
+                    return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, error_status=error_status, form=form)
             return redirect(request.url)
 
-        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases)
+        return render_template('trade.html', status = session.get('login', None), admin = session.get('admin'), stocks_owned=stocks_owned, stock_info=stock_info, stock_price = stock_price, user_balance=format(user_balance, ".2f"), recent_purchases=recent_purchases, form=form)
 
 
 
