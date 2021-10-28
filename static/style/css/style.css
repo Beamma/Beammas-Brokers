@@ -285,8 +285,18 @@ nav a:hover{
 .stock_filter form{
   border-right: 4px solid var(--silver);
 }
+
+.stock_filter ul{
+  list-style: none;
+  padding: 0px;
+}
+
 .stock_filter b{
   color: var(--gold);
+}
+
+.stock_filter .search input{
+  width: 90%;
 }
 
 .all_stock_wrapper .stock_info{

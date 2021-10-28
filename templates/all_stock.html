@@ -8,38 +8,15 @@
       </div>
       <div class = "type">
         <b> Type </b>
-        <p><input type="radio" name="type" value="All" checked></input>
-        <label for="ALL">ALL</label></p>
-        <p><input type="radio" name="type" value="Company"></input>
-        <label for="Company">Company</label></p>
-        <p><input type="radio" name="type" value="ETF"></input>
-        <label for="ETF">ETF</label></p>
-        <p><input type="radio" name="type" value="Fund"></input>
-        <label for="Fund">Fund</label></p>
+        <p>{{ form.type }}</p>
       </div>
       <div class = "category">
         <b> Category </b>
-        <p><input type="radio" name="category" value="All" checked></input>
-        <label for="ALL">ALL</label></p>
-        <p><input type="radio" name="category" value="Tech"></input>
-        <label for="Tech">Tech</label></p>
-        <p><input type="radio" name="category" value="Agriculture"></input>
-        <label for="Agriculture">Agriculture</label></p>
-        <p><input type="radio" name="category" value="Retail"></input>
-        <label for="Retail">Retail</label></p>
-        <p><input type="radio" name="category" value="Finance"></input>
-        <label for="Finance">Finance</label></p>
-        <p><input type="radio" name="category" value="Automotive"></input>
-        <label for="Automotive">Automotive</label></p>
+        {{ form.category }}
       </div>
       <div class = "exchange">
         <b> Exchange </b>
-        <p><input type="radio" name="exchange" value="All" checked></input>
-        <label for="ALL">ALL</label></p>
-        <p><input type="radio" name="exchange" value="NASDAQ"></input>
-        <label for="NASDAQ">NASDAQ</label></p>
-        <p><input type="radio" name="exchange" value="NYSE"></input>
-        <label for="NYSE">NYSE</label></p>
+        {{ form.exchange(checked="All") }}
       </div>
       <input type="submit"></input>
     </form>

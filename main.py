@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
-from forms import Register, Login, Trade, Stock
+from forms import Register, Login, Trade, Stock, All_Stock
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -48,22 +48,22 @@ def home():
 
 @app.route('/stock', methods=['GET', 'POST'])
 def all_stock():
-
+    form = All_Stock()
     # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
         return redirect(url_for('login', status = session.get('login', None), admin = session.get('admin')))
 
     if request.method == "POST":
         # Search for stock
-        search = request.form.get('search')
+        search = form.search.data
         if search:
             stock_info = models.Stock.query.filter_by(symbol=search).all()
         else:
 
             # Stock Filters
-            type = request.form.get('type')
-            category = request.form.get('category')
-            market = request.form.get('exchange')
+            type = form.type.data
+            category = form.category.data
+            market = form.exchange.data
             if type != "All" and category != "All" and market != "All":
                 stock_info = models.Stock.query.filter_by(type=type, category=category, market=market).all()
 
@@ -88,10 +88,10 @@ def all_stock():
             if type == "All" and category == "All" and market == "All":
                 stock_info = models.Stock.query.all()
 
-        return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'))
+        return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'), form=form)
     else:
         stock_info = models.Stock.query.all()
-    return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'))
+    return render_template("all_stock.html", status = session.get('login', None), stock_info=stock_info, admin = session.get('admin'), form=form)
 
 
 

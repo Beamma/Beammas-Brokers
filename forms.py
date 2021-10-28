@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, TextField, TextAreaField, SelectField, StringField, PasswordField
+from wtforms import IntegerField, TextField, TextAreaField, SelectField, StringField, PasswordField, RadioField
 from wtforms.widgets import PasswordInput
 from wtforms.validators import DataRequired, Optional, ValidationError, Email
 import models
@@ -16,6 +16,7 @@ class Register(FlaskForm):
     password = PasswordField("password", validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired(), Email(), check_email])
 
+
 class Login(FlaskForm):
 
     def exisiting_email(form, field):
@@ -26,11 +27,21 @@ class Login(FlaskForm):
     password = PasswordField("password", validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired(), Email(), exisiting_email])
 
+
 class Trade(FlaskForm):
 
     trade = SelectField("trade", validators=[DataRequired()])
     amount = IntegerField("amount", validators=[DataRequired()])
 
+
 class Stock(FlaskForm):
 
     period = SelectField("period", validators=[DataRequired()])
+
+
+class All_Stock(FlaskForm):
+
+    search = TextField("search")
+    type = RadioField("type", choices=[("All", "All"), ("Company", "Company"), ("ETF", "ETF"), ("Fund", "Fund")], default="All", validators=[DataRequired()])
+    category = RadioField("category", choices=[("All", "All"), ("Tech", "Tech"), ("Agriculture", "Agriculture"), ("Retail", "Retail"), ("Finance", "Finance"), ("Automotive", "Automotive")], default="All", validators=[DataRequired()])
+    exchange = RadioField("exchange", choices=[("All", "All"), ("NASDAQ", "NASDAQ"), ("NYSE", "NYSE")], default="All", validators=[DataRequired()])
