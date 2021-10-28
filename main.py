@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 app.config['CACHE_TYPE'] = 'simple'
 cache.init_app(app)
 import models
-from forms import Register, Login, Trade
+from forms import Register, Login, Trade, Stock
 
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
@@ -101,6 +101,8 @@ def all_stock():
 @app.route('/stock/<symbol>', methods=["GET", "POST"])
 # @cache.cached(timeout=120)
 def stock(symbol):
+    form = Stock()
+    form.period.choices = [("max", "Max"), ("5y", "5 Years"), ("2y", "2 Years"), ("1y", "1 Year"), ("6mo", "6 Months"), ("1mo", "1 Month"), ("14d", "2 Weeks"), ("7d", "1 Week"), ("2d", "2 Days"), ("1d", "1 Day"), ("1h", "1 Hour")]
     maximum = 0
     # Check If user is logged in, if not redirect for login
     if session.get('login', None) == 0:
@@ -108,10 +110,9 @@ def stock(symbol):
 
     if request.method == "POST":
         # Select interval for API/Graph based off the period selected
+        period = form.period.data
         periods = {'max': '1d', '5y': '1d', '2y': '1d', '1y': '1d', '6mo': '1d', '1mo': '1h', '14d': '1h', '7d': '30m', '2d': '5m', '1d': '5m', '1h': '1m'}
-        period = request.form.get("period")
         interval = periods[period]
-
     else:
         # Default Values
         period = '7d'
@@ -139,7 +140,7 @@ def stock(symbol):
     yields = ticker_info['fiveYearAvgDividendYield']
     price_info = {'Max': maximum, 'Low': low, 'Current': current, 'Price Change': price_change, 'Open': open, 'Market Cap': market_cap, 'Five Year Dividend Yield': yields}
 
-    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, price_info = price_info)
+    return render_template('stock.html', status = session.get('login', None), admin = session.get('admin'), stock = stock_history, stock_info = stock_info, period = period, price_info = price_info, form=form)
 
 
 

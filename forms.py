@@ -30,3 +30,7 @@ class Trade(FlaskForm):
 
     trade = SelectField("trade", validators=[DataRequired()])
     amount = IntegerField("amount", validators=[DataRequired()])
+
+class Stock(FlaskForm):
+
+    period = SelectField("period", validators=[DataRequired()])
