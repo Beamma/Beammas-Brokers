@@ -31,8 +31,6 @@ def history_price(symbol, period, interval):
     history = ticker.history(period=period, interval=interval)
     return(history)
 
-# @cache.cached(timeout=600)
-
 
 def info_stock(symbol):
     ticker = yf.Ticker(symbol)
@@ -130,7 +128,6 @@ def all_stock():
 
 
 @app.route("/stock/<symbol>", methods=["GET", "POST"])
-# @cache.cached(timeout=120)
 def stock(symbol):
     form = Stock()
     form.period.choices = [
@@ -208,7 +205,6 @@ def stock(symbol):
         date_price = [index, history.loc[index]["Close"]]
         current_price.append(date_price)
     current = format(current_price[-1][1], ".2f")
-
     ticker_info = info_stock(symbol)
     maximum = format(max(history["High"]), ".2f")
     low = format(min(history["Low"]), ".2f")
@@ -240,7 +236,6 @@ def stock(symbol):
 
 
 @app.route("/stock/trade/<symbol>", methods=["GET", "POST"])
-# @cache.cached(timeout=120)
 def trade(symbol):
     form = Trade()
     form.trade.choices = [("Buy", "Buy"), ("Sell", "Sell")]
@@ -469,7 +464,7 @@ def trade(symbol):
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
 
-    # check if suer is admin if not redirect to home
+    # Check if suer is admin if not redirect to home
     if session.get("admin") != 1:
         return redirect(
             url_for(
@@ -561,9 +556,9 @@ def admin():
 
 @app.route("/admin/update", methods=["GET", "POST"])
 def update():
-    update = session.get("update")  # call stock to update
+    update = session.get("update")  # Call stock to update
 
-    # check to make sure user is admin and has submitted a stock to update
+    # Check to make sure user is admin and has submitted a stock to update
     if session.get("admin") == 1 and update is not None:
         stock = models.Stock.query.filter_by(symbol=update).first()
         if request.method == "POST":
