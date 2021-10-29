@@ -4,26 +4,6 @@
   <div class="stock_page">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      // google.charts.load('current', {'packages':['corechart']});
-      // google.charts.setOnLoadCallback(drawChart);
-      //
-      // function drawChart() {
-      //   var data = google.visualization.arrayToDataTable([
-      // ['Time', 'Price'],
-      // {% for data in stock %}
-      //   ['{{ data[0] }}', {{ data[1] }}],
-      // {% endfor %}
-      //   ]);
-      //
-      //   var options = {
-      //     title: '{{ stock_info.name }}',
-      //     legend: { position: 'bottom' }
-      //   };
-      //
-      //   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-      //
-      //   chart.draw(data, options);
-      // }
   google.charts.load('current', {packages: ['corechart', 'line']});
   google.charts.setOnLoadCallback(drawBasic);
 
@@ -35,7 +15,6 @@
 
         data.addRows([
           {% for data in stock %}
-            // [new Date({{ data[0].year }}, {{ data[0].month }}, {{ data[0].day }}, {{ data[0].hour }}, {{ data[0].minutes }}), {{ data[1] }}],
             ['{{ data[0].strftime('%d-%m-%Y') }}', {{ data[1] }}],
           {% endfor %}
         ]);

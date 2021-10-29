@@ -13,9 +13,8 @@ import os
 
 
 cache = Cache()
-
 app = Flask(__name__)
-app.config.from_object(Config)  # applying all config to app
+app.config.from_object(Config)  # Applying all config to app
 app.config["SESSION_TYPE"] = "memcached"
 app.config["SECRET_KEY"] = "super secret key"
 WTF_CSRF_ENABLED = True
@@ -26,12 +25,13 @@ cache.init_app(app)
 import models
 from forms import Register, Login, Trade, Stock, All_Stock, Deposit
 
+# Get history of stock price
 def history_price(symbol, period, interval):
     ticker = yf.Ticker(symbol)
     history = ticker.history(period=period, interval=interval)
     return(history)
 
-
+# Get info on stock
 def info_stock(symbol):
     ticker = yf.Ticker(symbol)
     ticker_info = ticker.info
@@ -57,7 +57,7 @@ def home():
 @app.route("/stock", methods=["GET", "POST"])
 def all_stock():
     form = All_Stock()
-    # Check If user is logged in, if not redirect for login
+    # Check f user is logged in, if not redirect for login
     if session.get("login", None) == 0:
         return redirect(
             url_for(
@@ -74,7 +74,7 @@ def all_stock():
             stock_info = models.Stock.query.filter_by(symbol=search).all()
         else:
 
-            # Stock Filters
+            # Stock filters
             type = form.type.data
             category = form.category.data
             market = form.exchange.data
@@ -154,7 +154,7 @@ def stock(symbol):
         ("1h",
          "1 Hour")]
     maximum = 0
-    # Check If user is logged in, if not redirect for login
+    # Check if user is logged in, if not redirect for login
     if session.get("login", None) == 0:
         return redirect(
             url_for(
@@ -496,7 +496,7 @@ def admin():
         delete_status = ""
         update_status = ""  # Set update status to false (no error status)
         submitted = None  # Set submitted status to false (no error status)
-
+        create_status = ""
         if request.method == "POST":
 
             # Check Radio Selection, From then run neccesary updates/ deletes
