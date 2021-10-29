@@ -373,10 +373,28 @@ def trade(symbol):
             if trade == "Sell":
                 # Get amount of stock user want to sell, and amount of stock
                 # user has
-                amount = int(request.form.get("amount"))
+                amount = form.amount.data
                 portfolio = models.Portfolio.query.filter_by(
-                    user_id=session.get("login", None), stock_id=stock[0].id).first()
-
+                user_id=session.get("login", None), stock_id=stock[0].id).first()
+                if portfolio is None:
+                    error_status = "Failed. You Do Not Own Enough Stock."
+                    return render_template(
+                        "trade.html",
+                        status=session.get(
+                            "login",
+                            None),
+                        admin=session.get("admin"),
+                        stocks_owned=stocks_owned,
+                        stock_info=stock_info,
+                        stock_price=format(
+                            stock_price,
+                            ".2f"),
+                        user_balance=format(
+                            user_balance,
+                            ".2f"),
+                        recent_purchases=recent_purchases,
+                        error_status=error_status,
+                        form=form)
                 # If stock amount selling is = to owned, delete completely
                 if portfolio.amount == amount:
                     db.session.delete(db.session.merge(portfolio))
@@ -482,6 +500,7 @@ def admin():
         if request.method == "POST":
 
             # Check Radio Selection, From then run neccesary updates/ deletes
+            create_status = ""
             radio = request.form.get("create_delete")
             if radio == "create":
                 # Create
@@ -489,6 +508,19 @@ def admin():
                 symbol = request.form.get("ticker")
                 ticker = yf.Ticker(symbol)
                 ticker_info = ticker.info
+                if 'shortName' in ticker_info:
+                    pass
+                else:
+                    create_status = "Ticker Does not Exist"
+                    return render_template(
+                        "admin.html",
+                        status=session.get(
+                            "login",
+                            None),
+                        admin=session.get("admin"),
+                        delete_status=delete_status,
+                        submitted=submitted,
+                        update_status=update_status, create_status=create_status)
                 # Check to see if inputs valid
                 valid = [
                     img_file,
@@ -551,7 +583,7 @@ def admin():
             admin=session.get("admin"),
             delete_status=delete_status,
             submitted=submitted,
-            update_status=update_status)
+            update_status=update_status, create_status=create_status)
 
 
 @app.route("/admin/update", methods=["GET", "POST"])
@@ -690,6 +722,7 @@ def register():
             # Log user in using id
             user = models.User.query.filter_by(email=email).first()
             session["login"] = user.id
+            session["admin"] = admin
             return redirect(
                 url_for(
                     "home",
