@@ -424,6 +424,10 @@ table a{
   color: var(--silver);
 }
 
+.user_bottom{
+  height: 10vh;
+}
+
 
 /* Trade Styling */
 .trade_wrapper{

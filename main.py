@@ -214,11 +214,11 @@ def stock(symbol):
     market_cap = ticker_info["marketCap"]
     yields = ticker_info["fiveYearAvgDividendYield"]
     price_info = {
-        "Max": maximum,
-        "Low": low,
+        "Todays Max": maximum,
+        "Todays Low": low,
         "Current": current,
-        "Price Change": price_change,
-        "Open": open,
+        "Period Price Change": price_change,
+        "Period Open": open,
         "Market Cap": market_cap,
         "Five Year Dividend Yield": yields}
 
