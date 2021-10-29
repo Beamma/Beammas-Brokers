@@ -1,5 +1,6 @@
 from main import db
 
+
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -10,8 +11,8 @@ class User(db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=0)
 
     stocks = db.relationship('Trade_Info', back_populates='user')
-    # stocks_sell = db.relationship('Sold_Stock', back_populates='user')
     stocks_portfolio = db.relationship('Portfolio', back_populates='user')
+
 
 class Stock(db.Model):
     __tablename__ = 'Stock'
@@ -26,7 +27,7 @@ class Stock(db.Model):
 
     users = db.relationship('Trade_Info', back_populates='stock')
     user_portfolio = db.relationship('Portfolio', back_populates='stock')
-    # user_sell = db.relationship('Sold_Stock', back_populates='stock')
+
 
 class Trade_Info(db.Model):
     __tablename__ = 'Trade_Info'
@@ -40,19 +41,6 @@ class Trade_Info(db.Model):
 
     stock = db.relationship('Stock', back_populates='users')
     user = db.relationship('User', back_populates='stocks')
-# db.create_all(extend_existing=True)
-
-# class Sold_Stock(db.Model):
-#     __tablename__ = 'Sold_Stock'
-#     id = db.Column(db.Integer, primary_key=True, nullable=False)
-#     stock_id = db.Column(db.Integer, db.ForeignKey('Stock.id'), nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
-#     amount = db.Column(db.Integer, nullable=False)
-#     sell_price = db.Column(db.Integer, nullable=False)
-#     sell_date = db.Column(db.DateTime, nullable=False)
-#
-#     stock = db.relationship('Stock', back_populates='user_sell')
-#     user = db.relationship('User', back_populates='stocks_sell')
 
 
 class Portfolio(db.Model):
