@@ -722,7 +722,7 @@ def register():
             # Log user in using id
             user = models.User.query.filter_by(email=email).first()
             session["login"] = user.id
-            session["admin"] = admin
+            session["admin"] = 0
             return redirect(
                 url_for(
                     "home",

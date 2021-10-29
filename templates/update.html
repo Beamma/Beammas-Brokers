@@ -7,21 +7,21 @@
       <form method="POST" enctype="multipart/form-data">
         <h1> Update Stock </h1>
         <div class = "name">
-          <input type="string" name="name" value="{{ stock.name }}"></input>
+          <input type="string" name="name" value="{{ stock.name }}" required></input>
         </div>
         <div class="ticker">
-          <input type="string" name="ticker" value="{{ stock.symbol }}"></input>
+          <input type="string" name="ticker" value="{{ stock.symbol }}" required></input>
         </div>
         <div class="logo">
           <input type="file" name="logo" value="{{ stock.logo }}"></input>
         </div>
         <div class="description">
-          <textarea name="description" rows="8" cols="80">{{ stock.description }}</textarea>
+          <textarea name="description" rows="8" cols="80" required>{{ stock.description }}</textarea>
         </div>
         <div class="filters">
-          <input type="string" name="type" value="{{ stock.type }}"></input>
-          <input type="string" name="market" value="{{ stock.market }}"></input>
-          <input type="string" name="category" value="{{ stock.category }}"></input>
+          <input type="string" name="type" value="{{ stock.type }}" required></input>
+          <input type="string" name="market" value="{{ stock.market }}" required></input>
+          <input type="string" name="category" value="{{ stock.category }}" required></input>
         </div>
         <div class="submit">
           <input type="submit"></input>
